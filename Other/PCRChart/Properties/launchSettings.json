@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "PCRChart": {
+      "commandName": "Project",
+      "commandLineArgs": "F:\\PCRDMM\\PrincessConnectReDive\\priconner\\PrincessConnectReDive_Data\\StreamingAssets\\Chart\\ChartSaveData"
+    }
+  }
+}
