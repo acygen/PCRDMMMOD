@@ -192,7 +192,7 @@ namespace PCRCalculator.Tool
             this.enemyDes = bossDes;
             uBTimeDatas.Clear();
             ubTimesInited = false;
-            ShowPCRUI.LoadUI();
+            //ShowPCRUI.LoadUI();
         }
         public void OnBattleFinish(int frameLogic,int frameReal)
         {

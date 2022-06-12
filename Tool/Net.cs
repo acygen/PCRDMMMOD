@@ -80,64 +80,62 @@ namespace PCRCalculator.Tool
 
 	}
 	[HarmonyPatch(typeof(AssetManager), "BuildAssetDownloadURL",new Type[] { typeof(LFEKLJKFNPE) })]
-public class URLHook
-    {
-		/*static bool Prefix(ref string __result, LFEKLJKFNPE JJOBDIMBAIC)
-        {
-			StringBuilder stringBuilder = new StringBuilder();
-			bool flag = false;
-			switch (JJOBDIMBAIC.LILCMDCAFLM)
-			{
-				case LFEKLJKFNPE.OHMMHCICKCF.Sound:
-					stringBuilder.Append(AIILLDHPIGL.GetSoundResourceURL());
-					flag = true;
-					break;
-				case LFEKLJKFNPE.OHMMHCICKCF.Movie:
-					stringBuilder.Append(AIILLDHPIGL.GetMoiveResourceURL());
-					flag = true;
-					break;
-				case LFEKLJKFNPE.OHMMHCICKCF.AppResBundle:
-					stringBuilder.Append(AIILLDHPIGL.GetAppResURL());
-					flag = true;
-					break;
-				case LFEKLJKFNPE.OHMMHCICKCF.AssetBundle:
-					stringBuilder.Append(AIILLDHPIGL.GetAssetBundleURL());
-					flag = true;
-					break;
-				default:
-					stringBuilder.Append(
-						Hook.Hook.CallstaticMethod<string>(typeof(AssetManager), "getManifestURL", new object[] { JJOBDIMBAIC }));
-					break;
-			}
-			if (flag)
-			{
-				stringBuilder.Append(JJOBDIMBAIC.AIMMFJBHLGE.Substring(0, 2) + "/");
-				stringBuilder.Append(JJOBDIMBAIC.AIMMFJBHLGE);
-			}
-			else
-			{
-				stringBuilder.Append(JJOBDIMBAIC.CIAJGHECFHJ);
-			}
-			__result = stringBuilder.ToString();
-			ClientLog.AccumulateClientLog("Download url-" + __result);
-			return false;
-		}*/
+    public class URLHook
+    {		
 		static void Postfix(ref string __result, LFEKLJKFNPE JJOBDIMBAIC)
         {
 			ClientLog.AccumulateClientLog("原始下载地址->" + __result);
 			if (!PCRSettings.replaceManifestURL)
 				return;
 			string[] urls = __result.Split('/');
+			bool flag = false;
             if (urls.Length > 0 & urls[urls.Length - 1].Contains("manifest"))
             {
 				string path = PCRSettings.ManifestPath + "/" + urls[urls.Length - 1];
 				if (File.Exists(path))
                 {
 					__result = path;
+					flag = true;
+                }
+                else
+                {
+					PCRTool.DownloadFile(__result, path);
                 }
             }
-			ClientLog.AccumulateClientLog("重定向->" + __result);
+			ClientLog.AccumulateClientLog(flag?("重定向->" + __result):"重定向失败！");
+			
+		}
+	}
+	[HarmonyPatch(typeof(BaseTask), "errorDialogByParseFailed")]
+	public class TaskErrorHook
+    {
+		static bool Prefix(BaseTask __instance)
+        {
+			ClientLog.AccumulateClientLog($"[ERROR]:Error from {__instance.ToString()}");
+			return false;
+		}
+
+	}
+	//[HarmonyPatch(typeof(HomeTask), "ParseHomeIndexPartial")]
+	public class HomeTaskErrorHook
+	{
+		static bool Perfix(HomeTask __instance,  int _resultCode, JsonData _header, JsonData _data)
+		{
+			try
+			{
+				HomeIndexReceiveParam homeIndexReceiveParam = new HomeIndexReceiveParam(_data);
+				Hook.Hook.CallVoidMethod(typeof(HomeTask), __instance, "parseBaseReceiveParam", new object[] { homeIndexReceiveParam });
+				Hook.Hook.CallVoidMethod(typeof(HomeTask), __instance, "ParseHomeIndexImpl", new object[] { _resultCode, _header, homeIndexReceiveParam });
+				ManagerSingleton<ApiManager>.Instance.PartialCallbackHomeIndexReceiveParam.Call(homeIndexReceiveParam);
+			}
+            catch(Exception ex)
+            {
+				ClientLog.AccumulateClientLog($"[ERROR]:{ex.Message}\n{ex.StackTrace}");
+
+			}
+			return false;
 
 		}
+
 	}
 }

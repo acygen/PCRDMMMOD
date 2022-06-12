@@ -85,6 +85,9 @@ namespace SetBox
         private Button button3;
         private CheckBox showUICheck;
         private CheckBox replaceURLCheck;
+        private Label label20;
+        private TextBox VersionText;
+        private Button ConfigVersion;
         private PCRSettings Settings;
         #endregion
         public ManagerForm()
@@ -197,6 +200,7 @@ namespace SetBox
             radioButton1.Checked = vv.Item1;
             radioButton2.Checked = !vv.Item1;
             textBox1.Text = vv.Item2;
+            VersionText.Text = PCRSettings.Version.ToString();
         }
         private void toolStripStatusLabel1_Click(object sender, EventArgs e)
 		{
@@ -276,6 +280,7 @@ namespace SetBox
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.MainSetting = new System.Windows.Forms.TabPage();
+            this.replaceURLCheck = new System.Windows.Forms.CheckBox();
             this.checkBox1701 = new System.Windows.Forms.CheckBox();
             this.uselog = new System.Windows.Forms.CheckBox();
             this.saveBaseSettingButton = new System.Windows.Forms.Button();
@@ -318,7 +323,9 @@ namespace SetBox
             this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.label16 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
-            this.replaceURLCheck = new System.Windows.Forms.CheckBox();
+            this.VersionText = new System.Windows.Forms.TextBox();
+            this.label20 = new System.Windows.Forms.Label();
+            this.ConfigVersion = new System.Windows.Forms.Button();
             this.statusStrip1.SuspendLayout();
             this.clanSetting.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cb_seed)).BeginInit();
@@ -385,7 +392,7 @@ namespace SetBox
             this.clanSetting.Location = new System.Drawing.Point(4, 36);
             this.clanSetting.Name = "clanSetting";
             this.clanSetting.Padding = new System.Windows.Forms.Padding(3);
-            this.clanSetting.Size = new System.Drawing.Size(531, 264);
+            this.clanSetting.Size = new System.Drawing.Size(531, 301);
             this.clanSetting.TabIndex = 0;
             this.clanSetting.Text = "会战设置";
             this.clanSetting.UseVisualStyleBackColor = true;
@@ -671,6 +678,17 @@ namespace SetBox
             this.MainSetting.Text = "基础设置";
             this.MainSetting.UseVisualStyleBackColor = true;
             // 
+            // replaceURLCheck
+            // 
+            this.replaceURLCheck.AutoSize = true;
+            this.replaceURLCheck.Location = new System.Drawing.Point(215, 270);
+            this.replaceURLCheck.Name = "replaceURLCheck";
+            this.replaceURLCheck.Size = new System.Drawing.Size(236, 31);
+            this.replaceURLCheck.TabIndex = 16;
+            this.replaceURLCheck.Text = "将Manifest定向到本地";
+            this.replaceURLCheck.UseVisualStyleBackColor = true;
+            this.replaceURLCheck.CheckedChanged += new System.EventHandler(this.replaceURLCheck_CheckedChanged);
+            // 
             // checkBox1701
             // 
             this.checkBox1701.AutoSize = true;
@@ -864,7 +882,7 @@ namespace SetBox
             this.tabPage2.Location = new System.Drawing.Point(4, 36);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(531, 264);
+            this.tabPage2.Size = new System.Drawing.Size(531, 301);
             this.tabPage2.TabIndex = 4;
             this.tabPage2.Text = "战斗设置";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -1011,7 +1029,7 @@ namespace SetBox
             this.tabPage1.Location = new System.Drawing.Point(4, 36);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(531, 264);
+            this.tabPage1.Size = new System.Drawing.Size(531, 301);
             this.tabPage1.TabIndex = 5;
             this.tabPage1.Text = "log";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -1031,6 +1049,9 @@ namespace SetBox
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.ConfigVersion);
+            this.tabPage3.Controls.Add(this.label20);
+            this.tabPage3.Controls.Add(this.VersionText);
             this.tabPage3.Controls.Add(this.button3);
             this.tabPage3.Controls.Add(this.label13);
             this.tabPage3.Controls.Add(this.button2);
@@ -1042,13 +1063,14 @@ namespace SetBox
             this.tabPage3.Location = new System.Drawing.Point(4, 36);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(531, 264);
+            this.tabPage3.Size = new System.Drawing.Size(531, 301);
             this.tabPage3.TabIndex = 6;
             this.tabPage3.Text = "备用";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
             // button3
             // 
+            this.button3.Enabled = false;
             this.button3.Location = new System.Drawing.Point(86, 95);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(149, 43);
@@ -1129,16 +1151,31 @@ namespace SetBox
             this.textBox1.Text = "2021/06/25 10:00:00";
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
-            // replaceURLCheck
+            // VersionText
             // 
-            this.replaceURLCheck.AutoSize = true;
-            this.replaceURLCheck.Location = new System.Drawing.Point(215, 270);
-            this.replaceURLCheck.Name = "replaceURLCheck";
-            this.replaceURLCheck.Size = new System.Drawing.Size(236, 31);
-            this.replaceURLCheck.TabIndex = 16;
-            this.replaceURLCheck.Text = "将Manifest定向到本地";
-            this.replaceURLCheck.UseVisualStyleBackColor = true;
-            this.replaceURLCheck.CheckedChanged += new System.EventHandler(this.replaceURLCheck_CheckedChanged);
+            this.VersionText.Location = new System.Drawing.Point(101, 261);
+            this.VersionText.Name = "VersionText";
+            this.VersionText.Size = new System.Drawing.Size(179, 34);
+            this.VersionText.TabIndex = 9;
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(17, 263);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(98, 27);
+            this.label20.TabIndex = 10;
+            this.label20.Text = "版本号： ";
+            // 
+            // ConfigVersion
+            // 
+            this.ConfigVersion.Location = new System.Drawing.Point(286, 256);
+            this.ConfigVersion.Name = "ConfigVersion";
+            this.ConfigVersion.Size = new System.Drawing.Size(227, 43);
+            this.ConfigVersion.TabIndex = 11;
+            this.ConfigVersion.Text = "更新版本号";
+            this.ConfigVersion.UseVisualStyleBackColor = true;
+            this.ConfigVersion.Click += new System.EventHandler(this.ConfigVersion_Click);
             // 
             // ManagerForm
             // 
@@ -1347,6 +1384,19 @@ namespace SetBox
         private void ignoreManifest_CheckedChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void ConfigVersion_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                PCRSettings.Version = int.Parse(VersionText.Text);
+                MessageBox.Show($"成功，当前版本{PCRSettings.Version}，重启生效！");
+            }
+            catch (System.FormatException)
+            {
+                MessageBox.Show("输入错误！");
+            }
         }
     }
 }

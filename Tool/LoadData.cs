@@ -98,13 +98,13 @@ namespace PCRCalculator.Tool
     }
     public class GameStartData
     {
-        public DataHead data_headers;
+        public DataHead_gameStart data_headers;
         public GameStartDataBody data;
 
         public GameStartData() { }
-        public GameStartData(int type)
+        public GameStartData(int version)
         {
-            data_headers = new DataHead(type);
+            data_headers = new DataHead_gameStart(version);
             data = new GameStartDataBody();
         }
     }
@@ -177,6 +177,21 @@ namespace PCRCalculator.Tool
         {
             servertime = time;
             result_code = resultcode;
+        }
+    }
+    public class DataHead_gameStart
+    {
+        public string request_id = "1234564894";
+        public int short_udid = 0;
+        public long viewer_id = 0;
+        public string sid = "000";
+        public long servertime = 1615604550;
+        public int result_code = 1;
+        public int required_res_ver = 10038100;
+        public DataHead_gameStart() { }
+        public DataHead_gameStart(int version)
+        {
+            required_res_ver = version;
         }
     }
     public class DataHead2

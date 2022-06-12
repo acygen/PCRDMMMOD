@@ -80,6 +80,17 @@ namespace PCRCalculator.Tool
                 Instance.globalSetting.SetDBPath(value);
             }
         }
+        public static int Version
+        {
+            get
+            {
+                return Instance.globalSetting.version;
+            }
+            set
+            {
+                Instance.globalSetting.SetVersion(value);
+            }
+        }
         public static string ManifestPath => UnityEngine.Application.streamingAssetsPath + "/Manifest";
         private static readonly string[] DataNames = new string[17]
 {
@@ -631,7 +642,7 @@ namespace PCRCalculator.Tool
         public bool use1701 = false;
         public int rankbounsRank = 22;
         public bool replaceManifestURL = false;
-
+        public int version = 10038100;//版本号
         public bool SetFixTime(bool enable, string timestr)
         {
             useFixTime = enable;
@@ -668,6 +679,11 @@ namespace PCRCalculator.Tool
         public void SetDBPath(string path)
         {
             dbPath = path;
+            PCRSettings.Instance.Save(4);
+        }
+        public void SetVersion(int version)
+        {
+            this.version = version;
             PCRSettings.Instance.Save(4);
         }
     }

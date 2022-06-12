@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PCRChart", "Other\PCRChart\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PluginLoader", "Other\PluginLoader\PluginLoader.csproj", "{A27F6850-203E-4F86-B397-28FC3E5D00DF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnityEngine.CoreModule", "Other\UnityEngine.CoreModle\UnityEngine.CoreModule.csproj", "{EF328766-B6C7-4AB1-9A82-9BD0984746C9}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,10 +27,6 @@ Global
 		{A27F6850-203E-4F86-B397-28FC3E5D00DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A27F6850-203E-4F86-B397-28FC3E5D00DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A27F6850-203E-4F86-B397-28FC3E5D00DF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EF328766-B6C7-4AB1-9A82-9BD0984746C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EF328766-B6C7-4AB1-9A82-9BD0984746C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EF328766-B6C7-4AB1-9A82-9BD0984746C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EF328766-B6C7-4AB1-9A82-9BD0984746C9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

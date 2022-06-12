@@ -7,6 +7,8 @@ using Elements;
 using Cute;
 using Newtonsoft0.Json;
 using System.Windows.Forms;
+using System.Net;
+using System.IO;
 
 namespace PCRCalculator.Tool
 {
@@ -25,7 +27,7 @@ namespace PCRCalculator.Tool
         public SetBox.ManagerForm managerForm;
         int selectTarget = 1;
 
-        public static PCRTool Instance 
+        public static PCRTool Instance
         {
             get
             {
@@ -43,7 +45,7 @@ namespace PCRCalculator.Tool
                 managerForm.Show();
                 managerForm.Reflash();
             }
-            catch(System.Exception ex)
+            catch (System.Exception ex)
             {
                 MessageBox.Show("启动插件时发生错误：" + ex.Message);
             }
@@ -57,7 +59,7 @@ namespace PCRCalculator.Tool
             string result = "ERROR";
             if (URL.Contains("check/game_start"))
             {
-                GameStartData gameStartData = new GameStartData(1);
+                GameStartData gameStartData = new GameStartData(PCRSettings.Version);
                 result = JsonConvert.SerializeObject(gameStartData);
             }
             else if (URL.Contains("load/index"))
@@ -128,8 +130,8 @@ namespace PCRCalculator.Tool
             else if (URL.Contains("clan_battle/start") || URL.Contains("clan_battle/rehearsal_start"))
             {
                 bool isrehearsal = URL.Contains("rehearsal");
-                result = CreateClanBattleStartStr(uploadJson, isrehearsal,out var des);
-                PCRBattle.Instance.OnBattleStart(PCRSettings.LastSeed, PCRSettings.battleTime,false,des);
+                result = CreateClanBattleStartStr(uploadJson, isrehearsal, out var des);
+                PCRBattle.Instance.OnBattleStart(PCRSettings.LastSeed, PCRSettings.battleTime, false, des);
             }
             else if (URL.Contains("clan_battle/finish") || URL.Contains("clan_battle/rehearsal_finish"))
             {
@@ -154,7 +156,7 @@ namespace PCRCalculator.Tool
             else if (URL.Contains("arena/start"))
             {
                 result = CreateAreaStartData(uploadJson);
-                PCRBattle.Instance.OnBattleStart(PCRSettings.LastSeed,isJJC:true);
+                PCRBattle.Instance.OnBattleStart(PCRSettings.LastSeed, isJJC: true);
             }
             else if (URL.Contains("arena/cancel"))
             {
@@ -206,7 +208,7 @@ namespace PCRCalculator.Tool
             }
             return result;
         }
-        public static string CreateClanBattleStartStr(string json, bool isre,out string des)
+        public static string CreateClanBattleStartStr(string json, bool isre, out string des)
         {
             try
             {
@@ -267,7 +269,7 @@ namespace PCRCalculator.Tool
                 int carryTime = 0;
                 if (dead == 1)
                 {
-                    carryTime = (90-data.remain_time) + PCRSettings.Instance.clanSetting.overkillBackTime;
+                    carryTime = (90 - data.remain_time) + PCRSettings.Instance.clanSetting.overkillBackTime;
                     if (carryTime > 90)
                         carryTime = 90;
                 }
@@ -345,6 +347,32 @@ namespace PCRCalculator.Tool
             var aa = JsonConvert.DeserializeObject<AreaSelectData>(json);
             return aa.opponent_rank;
         }
-
+        private static List<string> downloadingURLS = new List<string>();
+        public static void DownloadFile(string url, string save)
+        {
+            try
+            {
+                if (downloadingURLS.Contains(url))
+                    return;
+                if (!File.Exists(save))
+                {
+                    downloadingURLS.Add(url);
+                    //先下载到临时文件
+                    var tmp = save + ".tmp";
+                    using (var web = new WebClient())
+                    {
+                        web.DownloadFile(url, tmp);
+                    }
+                    File.Move(tmp, save);
+                    ClientLog.AccumulateClientLog($"成功下载文件{save}");
+                    downloadingURLS.Remove(url);
+                }
+            }
+            catch(Exception ex)
+            {
+                ClientLog.AccumulateClientLog($"下载文件{save}时出错:{ex}");
+                downloadingURLS.Remove(url);
+            }
+        }
     }
 }
