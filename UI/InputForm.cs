@@ -29,6 +29,13 @@ namespace PCRCalculator.UI
         private void button2_Click(object sender, EventArgs e)
         {
             float p = 0;
+            int propoty = (int)numericUpDown1.Value;
+            if (propoty < 0 || propoty > 9)
+            {
+                MessageBox.Show("优先级错误！");
+                return;
+
+            }
             try
             {
                 p = int.Parse(textBox1.Text) + (float)((int)numericUpDown1.Value) / 10.0f;

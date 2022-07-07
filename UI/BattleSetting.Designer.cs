@@ -122,7 +122,7 @@ namespace PCRCalculator.UI
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.BUG设置);
             this.tabControl1.Location = new System.Drawing.Point(9, 9);
-            this.tabControl1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabControl1.Margin = new System.Windows.Forms.Padding(4);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(1055, 564);
@@ -134,9 +134,9 @@ namespace PCRCalculator.UI
             this.tabPage1.Controls.Add(this.panel1);
             this.tabPage1.Controls.Add(this.MainList);
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
-            this.tabPage1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabPage1.Margin = new System.Windows.Forms.Padding(4);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(4);
             this.tabPage1.Size = new System.Drawing.Size(1047, 535);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "UB设置";
@@ -146,7 +146,7 @@ namespace PCRCalculator.UI
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button1.Location = new System.Drawing.Point(8, 485);
-            this.button1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button1.Margin = new System.Windows.Forms.Padding(4);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(187, 38);
             this.button1.TabIndex = 4;
@@ -171,7 +171,7 @@ namespace PCRCalculator.UI
             this.panel1.Controls.Add(this.BT_del);
             this.panel1.Controls.Add(this.cb_enable);
             this.panel1.Location = new System.Drawing.Point(203, 8);
-            this.panel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(833, 515);
             this.panel1.TabIndex = 3;
@@ -190,8 +190,9 @@ namespace PCRCalculator.UI
             // BT_timeLine
             // 
             this.BT_timeLine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.BT_timeLine.Enabled = false;
             this.BT_timeLine.Location = new System.Drawing.Point(528, 478);
-            this.BT_timeLine.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.BT_timeLine.Margin = new System.Windows.Forms.Padding(4);
             this.BT_timeLine.Name = "BT_timeLine";
             this.BT_timeLine.Size = new System.Drawing.Size(147, 32);
             this.BT_timeLine.TabIndex = 11;
@@ -203,7 +204,7 @@ namespace PCRCalculator.UI
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button2.Location = new System.Drawing.Point(160, 478);
-            this.button2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button2.Margin = new System.Windows.Forms.Padding(4);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(147, 32);
             this.button2.TabIndex = 10;
@@ -215,7 +216,7 @@ namespace PCRCalculator.UI
             // 
             this.radioButton2.AutoSize = true;
             this.radioButton2.Location = new System.Drawing.Point(268, 4);
-            this.radioButton2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.radioButton2.Margin = new System.Windows.Forms.Padding(4);
             this.radioButton2.Name = "radioButton2";
             this.radioButton2.Size = new System.Drawing.Size(73, 19);
             this.radioButton2.TabIndex = 9;
@@ -227,7 +228,7 @@ namespace PCRCalculator.UI
             this.radioButton1.AutoSize = true;
             this.radioButton1.Checked = true;
             this.radioButton1.Location = new System.Drawing.Point(181, 4);
-            this.radioButton1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.radioButton1.Margin = new System.Windows.Forms.Padding(4);
             this.radioButton1.Name = "radioButton1";
             this.radioButton1.Size = new System.Drawing.Size(73, 19);
             this.radioButton1.TabIndex = 8;
@@ -271,7 +272,7 @@ namespace PCRCalculator.UI
             this.tableLayoutPanel2.Controls.Add(this.BT_a5, 1, 0);
             this.tableLayoutPanel2.Controls.Add(this.BT_e5, 0, 0);
             this.tableLayoutPanel2.Location = new System.Drawing.Point(9, 406);
-            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(4);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 2;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -285,7 +286,7 @@ namespace PCRCalculator.UI
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.BT_d5.Location = new System.Drawing.Point(4, 39);
-            this.BT_d5.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.BT_d5.Margin = new System.Windows.Forms.Padding(4);
             this.BT_d5.Name = "BT_d5";
             this.BT_d5.Size = new System.Drawing.Size(74, 28);
             this.BT_d5.TabIndex = 21;
@@ -299,7 +300,7 @@ namespace PCRCalculator.UI
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.BT_c4.Location = new System.Drawing.Point(250, 39);
-            this.BT_c4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.BT_c4.Margin = new System.Windows.Forms.Padding(4);
             this.BT_c4.Name = "BT_c4";
             this.BT_c4.Size = new System.Drawing.Size(74, 28);
             this.BT_c4.TabIndex = 20;
@@ -313,7 +314,7 @@ namespace PCRCalculator.UI
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.BT_d3.Location = new System.Drawing.Point(332, 39);
-            this.BT_d3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.BT_d3.Margin = new System.Windows.Forms.Padding(4);
             this.BT_d3.Name = "BT_d3";
             this.BT_d3.Size = new System.Drawing.Size(74, 28);
             this.BT_d3.TabIndex = 19;
@@ -327,7 +328,7 @@ namespace PCRCalculator.UI
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.BT_c5.Location = new System.Drawing.Point(86, 39);
-            this.BT_c5.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.BT_c5.Margin = new System.Windows.Forms.Padding(4);
             this.BT_c5.Name = "BT_c5";
             this.BT_c5.Size = new System.Drawing.Size(74, 28);
             this.BT_c5.TabIndex = 18;
@@ -341,7 +342,7 @@ namespace PCRCalculator.UI
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.BT_d4.Location = new System.Drawing.Point(168, 39);
-            this.BT_d4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.BT_d4.Margin = new System.Windows.Forms.Padding(4);
             this.BT_d4.Name = "BT_d4";
             this.BT_d4.Size = new System.Drawing.Size(74, 28);
             this.BT_d4.TabIndex = 17;
@@ -355,7 +356,7 @@ namespace PCRCalculator.UI
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.BT_c3.Location = new System.Drawing.Point(414, 39);
-            this.BT_c3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.BT_c3.Margin = new System.Windows.Forms.Padding(4);
             this.BT_c3.Name = "BT_c3";
             this.BT_c3.Size = new System.Drawing.Size(74, 28);
             this.BT_c3.TabIndex = 16;
@@ -369,7 +370,7 @@ namespace PCRCalculator.UI
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.BT_d1.Location = new System.Drawing.Point(660, 39);
-            this.BT_d1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.BT_d1.Margin = new System.Windows.Forms.Padding(4);
             this.BT_d1.Name = "BT_d1";
             this.BT_d1.Size = new System.Drawing.Size(74, 28);
             this.BT_d1.TabIndex = 15;
@@ -383,7 +384,7 @@ namespace PCRCalculator.UI
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.BT_c1.Location = new System.Drawing.Point(742, 39);
-            this.BT_c1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.BT_c1.Margin = new System.Windows.Forms.Padding(4);
             this.BT_c1.Name = "BT_c1";
             this.BT_c1.Size = new System.Drawing.Size(74, 28);
             this.BT_c1.TabIndex = 14;
@@ -397,7 +398,7 @@ namespace PCRCalculator.UI
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.BT_d2.Location = new System.Drawing.Point(496, 39);
-            this.BT_d2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.BT_d2.Margin = new System.Windows.Forms.Padding(4);
             this.BT_d2.Name = "BT_d2";
             this.BT_d2.Size = new System.Drawing.Size(74, 28);
             this.BT_d2.TabIndex = 13;
@@ -411,7 +412,7 @@ namespace PCRCalculator.UI
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.BT_c2.Location = new System.Drawing.Point(578, 39);
-            this.BT_c2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.BT_c2.Margin = new System.Windows.Forms.Padding(4);
             this.BT_c2.Name = "BT_c2";
             this.BT_c2.Size = new System.Drawing.Size(74, 28);
             this.BT_c2.TabIndex = 12;
@@ -425,7 +426,7 @@ namespace PCRCalculator.UI
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.BT_a1.Location = new System.Drawing.Point(742, 4);
-            this.BT_a1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.BT_a1.Margin = new System.Windows.Forms.Padding(4);
             this.BT_a1.Name = "BT_a1";
             this.BT_a1.Size = new System.Drawing.Size(74, 27);
             this.BT_a1.TabIndex = 9;
@@ -439,7 +440,7 @@ namespace PCRCalculator.UI
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.BT_e1.Location = new System.Drawing.Point(660, 4);
-            this.BT_e1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.BT_e1.Margin = new System.Windows.Forms.Padding(4);
             this.BT_e1.Name = "BT_e1";
             this.BT_e1.Size = new System.Drawing.Size(74, 27);
             this.BT_e1.TabIndex = 8;
@@ -453,7 +454,7 @@ namespace PCRCalculator.UI
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.BT_a2.Location = new System.Drawing.Point(578, 4);
-            this.BT_a2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.BT_a2.Margin = new System.Windows.Forms.Padding(4);
             this.BT_a2.Name = "BT_a2";
             this.BT_a2.Size = new System.Drawing.Size(74, 27);
             this.BT_a2.TabIndex = 7;
@@ -467,7 +468,7 @@ namespace PCRCalculator.UI
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.BT_e2.Location = new System.Drawing.Point(496, 4);
-            this.BT_e2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.BT_e2.Margin = new System.Windows.Forms.Padding(4);
             this.BT_e2.Name = "BT_e2";
             this.BT_e2.Size = new System.Drawing.Size(74, 27);
             this.BT_e2.TabIndex = 6;
@@ -481,7 +482,7 @@ namespace PCRCalculator.UI
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.BT_a3.Location = new System.Drawing.Point(414, 4);
-            this.BT_a3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.BT_a3.Margin = new System.Windows.Forms.Padding(4);
             this.BT_a3.Name = "BT_a3";
             this.BT_a3.Size = new System.Drawing.Size(74, 27);
             this.BT_a3.TabIndex = 5;
@@ -495,7 +496,7 @@ namespace PCRCalculator.UI
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.BT_e3.Location = new System.Drawing.Point(332, 4);
-            this.BT_e3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.BT_e3.Margin = new System.Windows.Forms.Padding(4);
             this.BT_e3.Name = "BT_e3";
             this.BT_e3.Size = new System.Drawing.Size(74, 27);
             this.BT_e3.TabIndex = 4;
@@ -509,7 +510,7 @@ namespace PCRCalculator.UI
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.BT_a4.Location = new System.Drawing.Point(250, 4);
-            this.BT_a4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.BT_a4.Margin = new System.Windows.Forms.Padding(4);
             this.BT_a4.Name = "BT_a4";
             this.BT_a4.Size = new System.Drawing.Size(74, 27);
             this.BT_a4.TabIndex = 3;
@@ -523,7 +524,7 @@ namespace PCRCalculator.UI
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.BT_e4.Location = new System.Drawing.Point(168, 4);
-            this.BT_e4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.BT_e4.Margin = new System.Windows.Forms.Padding(4);
             this.BT_e4.Name = "BT_e4";
             this.BT_e4.Size = new System.Drawing.Size(74, 27);
             this.BT_e4.TabIndex = 2;
@@ -537,7 +538,7 @@ namespace PCRCalculator.UI
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.BT_a5.Location = new System.Drawing.Point(86, 4);
-            this.BT_a5.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.BT_a5.Margin = new System.Windows.Forms.Padding(4);
             this.BT_a5.Name = "BT_a5";
             this.BT_a5.Size = new System.Drawing.Size(74, 27);
             this.BT_a5.TabIndex = 1;
@@ -551,7 +552,7 @@ namespace PCRCalculator.UI
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.BT_e5.Location = new System.Drawing.Point(4, 4);
-            this.BT_e5.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.BT_e5.Margin = new System.Windows.Forms.Padding(4);
             this.BT_e5.Name = "BT_e5";
             this.BT_e5.Size = new System.Drawing.Size(74, 27);
             this.BT_e5.TabIndex = 0;
@@ -581,7 +582,7 @@ namespace PCRCalculator.UI
             this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.UBList5, 0, 1);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(5, 65);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
@@ -597,7 +598,7 @@ namespace PCRCalculator.UI
             this.UBList1.FormattingEnabled = true;
             this.UBList1.ItemHeight = 15;
             this.UBList1.Location = new System.Drawing.Point(660, 29);
-            this.UBList1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.UBList1.Margin = new System.Windows.Forms.Padding(4);
             this.UBList1.Name = "UBList1";
             this.UBList1.Size = new System.Drawing.Size(160, 304);
             this.UBList1.TabIndex = 9;
@@ -610,7 +611,7 @@ namespace PCRCalculator.UI
             this.UBList2.FormattingEnabled = true;
             this.UBList2.ItemHeight = 15;
             this.UBList2.Location = new System.Drawing.Point(496, 29);
-            this.UBList2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.UBList2.Margin = new System.Windows.Forms.Padding(4);
             this.UBList2.Name = "UBList2";
             this.UBList2.Size = new System.Drawing.Size(156, 304);
             this.UBList2.TabIndex = 8;
@@ -623,7 +624,7 @@ namespace PCRCalculator.UI
             this.UBList3.FormattingEnabled = true;
             this.UBList3.ItemHeight = 15;
             this.UBList3.Location = new System.Drawing.Point(332, 29);
-            this.UBList3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.UBList3.Margin = new System.Windows.Forms.Padding(4);
             this.UBList3.Name = "UBList3";
             this.UBList3.Size = new System.Drawing.Size(156, 304);
             this.UBList3.TabIndex = 7;
@@ -636,7 +637,7 @@ namespace PCRCalculator.UI
             this.UBList4.FormattingEnabled = true;
             this.UBList4.ItemHeight = 15;
             this.UBList4.Location = new System.Drawing.Point(168, 29);
-            this.UBList4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.UBList4.Margin = new System.Windows.Forms.Padding(4);
             this.UBList4.Name = "UBList4";
             this.UBList4.Size = new System.Drawing.Size(156, 304);
             this.UBList4.TabIndex = 6;
@@ -719,7 +720,7 @@ namespace PCRCalculator.UI
             this.UBList5.FormattingEnabled = true;
             this.UBList5.ItemHeight = 15;
             this.UBList5.Location = new System.Drawing.Point(4, 29);
-            this.UBList5.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.UBList5.Margin = new System.Windows.Forms.Padding(4);
             this.UBList5.Name = "UBList5";
             this.UBList5.Size = new System.Drawing.Size(156, 304);
             this.UBList5.TabIndex = 5;
@@ -730,7 +731,7 @@ namespace PCRCalculator.UI
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox1.BackColor = System.Drawing.Color.Bisque;
             this.textBox1.Location = new System.Drawing.Point(5, 31);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(4);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(823, 25);
             this.textBox1.TabIndex = 5;
@@ -741,7 +742,7 @@ namespace PCRCalculator.UI
             // 
             this.BT_save.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.BT_save.Location = new System.Drawing.Point(683, 478);
-            this.BT_save.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.BT_save.Margin = new System.Windows.Forms.Padding(4);
             this.BT_save.Name = "BT_save";
             this.BT_save.Size = new System.Drawing.Size(147, 32);
             this.BT_save.TabIndex = 4;
@@ -753,7 +754,7 @@ namespace PCRCalculator.UI
             // 
             this.BT_del.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.BT_del.Location = new System.Drawing.Point(5, 479);
-            this.BT_del.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.BT_del.Margin = new System.Windows.Forms.Padding(4);
             this.BT_del.Name = "BT_del";
             this.BT_del.Size = new System.Drawing.Size(147, 32);
             this.BT_del.TabIndex = 3;
@@ -765,7 +766,7 @@ namespace PCRCalculator.UI
             // 
             this.cb_enable.AutoSize = true;
             this.cb_enable.Location = new System.Drawing.Point(5, 4);
-            this.cb_enable.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cb_enable.Margin = new System.Windows.Forms.Padding(4);
             this.cb_enable.Name = "cb_enable";
             this.cb_enable.Size = new System.Drawing.Size(135, 19);
             this.cb_enable.TabIndex = 0;
@@ -780,7 +781,7 @@ namespace PCRCalculator.UI
             this.MainList.FormattingEnabled = true;
             this.MainList.ItemHeight = 15;
             this.MainList.Location = new System.Drawing.Point(4, 6);
-            this.MainList.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.MainList.Margin = new System.Windows.Forms.Padding(4);
             this.MainList.Name = "MainList";
             this.MainList.ScrollAlwaysVisible = true;
             this.MainList.Size = new System.Drawing.Size(189, 469);
@@ -816,9 +817,9 @@ namespace PCRCalculator.UI
             this.tabPage2.Controls.Add(this.label7);
             this.tabPage2.Controls.Add(this.fastKeyCheck);
             this.tabPage2.Location = new System.Drawing.Point(4, 25);
-            this.tabPage2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabPage2.Margin = new System.Windows.Forms.Padding(4);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(4);
             this.tabPage2.Size = new System.Drawing.Size(1047, 535);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "快捷键设置";
@@ -840,7 +841,7 @@ namespace PCRCalculator.UI
             // 
             this.button10.Font = new System.Drawing.Font("宋体", 12F);
             this.button10.Location = new System.Drawing.Point(847, 219);
-            this.button10.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button10.Margin = new System.Windows.Forms.Padding(4);
             this.button10.Name = "button10";
             this.button10.Size = new System.Drawing.Size(108, 38);
             this.button10.TabIndex = 27;
@@ -874,7 +875,7 @@ namespace PCRCalculator.UI
             // 
             this.button9.Font = new System.Drawing.Font("宋体", 12F);
             this.button9.Location = new System.Drawing.Point(847, 154);
-            this.button9.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button9.Margin = new System.Windows.Forms.Padding(4);
             this.button9.Name = "button9";
             this.button9.Size = new System.Drawing.Size(108, 38);
             this.button9.TabIndex = 24;
@@ -908,7 +909,7 @@ namespace PCRCalculator.UI
             // 
             this.button8.Font = new System.Drawing.Font("宋体", 12F);
             this.button8.Location = new System.Drawing.Point(847, 91);
-            this.button8.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button8.Margin = new System.Windows.Forms.Padding(4);
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(108, 38);
             this.button8.TabIndex = 21;
@@ -942,7 +943,7 @@ namespace PCRCalculator.UI
             // 
             this.button7.Font = new System.Drawing.Font("宋体", 12F);
             this.button7.Location = new System.Drawing.Point(295, 369);
-            this.button7.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button7.Margin = new System.Windows.Forms.Padding(4);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(108, 38);
             this.button7.TabIndex = 18;
@@ -976,7 +977,7 @@ namespace PCRCalculator.UI
             // 
             this.button6.Font = new System.Drawing.Font("宋体", 12F);
             this.button6.Location = new System.Drawing.Point(295, 296);
-            this.button6.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button6.Margin = new System.Windows.Forms.Padding(4);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(108, 38);
             this.button6.TabIndex = 15;
@@ -1010,7 +1011,7 @@ namespace PCRCalculator.UI
             // 
             this.button5.Font = new System.Drawing.Font("宋体", 12F);
             this.button5.Location = new System.Drawing.Point(295, 214);
-            this.button5.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button5.Margin = new System.Windows.Forms.Padding(4);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(108, 38);
             this.button5.TabIndex = 12;
@@ -1044,7 +1045,7 @@ namespace PCRCalculator.UI
             // 
             this.button4.Font = new System.Drawing.Font("宋体", 12F);
             this.button4.Location = new System.Drawing.Point(295, 154);
-            this.button4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button4.Margin = new System.Windows.Forms.Padding(4);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(108, 38);
             this.button4.TabIndex = 9;
@@ -1078,7 +1079,7 @@ namespace PCRCalculator.UI
             // 
             this.button3.Font = new System.Drawing.Font("宋体", 12F);
             this.button3.Location = new System.Drawing.Point(295, 89);
-            this.button3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button3.Margin = new System.Windows.Forms.Padding(4);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(108, 38);
             this.button3.TabIndex = 6;
@@ -1113,7 +1114,7 @@ namespace PCRCalculator.UI
             this.fastKeyCheck.AutoSize = true;
             this.fastKeyCheck.Font = new System.Drawing.Font("宋体", 13F);
             this.fastKeyCheck.Location = new System.Drawing.Point(39, 32);
-            this.fastKeyCheck.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.fastKeyCheck.Margin = new System.Windows.Forms.Padding(4);
             this.fastKeyCheck.Name = "fastKeyCheck";
             this.fastKeyCheck.Size = new System.Drawing.Size(142, 26);
             this.fastKeyCheck.TabIndex = 0;
@@ -1125,9 +1126,9 @@ namespace PCRCalculator.UI
             // 
             this.BUG设置.Controls.Add(this.checkBox2);
             this.BUG设置.Location = new System.Drawing.Point(4, 25);
-            this.BUG设置.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.BUG设置.Margin = new System.Windows.Forms.Padding(4);
             this.BUG设置.Name = "BUG设置";
-            this.BUG设置.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.BUG设置.Padding = new System.Windows.Forms.Padding(4);
             this.BUG设置.Size = new System.Drawing.Size(1047, 535);
             this.BUG设置.TabIndex = 2;
             this.BUG设置.Text = "BUG设置";
@@ -1138,7 +1139,7 @@ namespace PCRCalculator.UI
             this.checkBox2.AutoSize = true;
             this.checkBox2.Font = new System.Drawing.Font("宋体", 13F);
             this.checkBox2.Location = new System.Drawing.Point(64, 60);
-            this.checkBox2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.checkBox2.Margin = new System.Windows.Forms.Padding(4);
             this.checkBox2.Name = "checkBox2";
             this.checkBox2.Size = new System.Drawing.Size(461, 26);
             this.checkBox2.TabIndex = 1;
@@ -1152,7 +1153,7 @@ namespace PCRCalculator.UI
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1067, 588);
             this.Controls.Add(this.tabControl1);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "BattleSettingWindow";
             this.Text = "BattleSetting";
             this.tabControl1.ResumeLayout(false);

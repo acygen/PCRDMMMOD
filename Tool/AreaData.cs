@@ -270,6 +270,13 @@ namespace PCRCalculator.Tool
                 unique_equip_slot.Add(new EquipSlot(unitUniqueEquip.equip_id, eq));
             }
         }
+        public void CreateExp()
+        {
+            //unit_exp = 0;
+            var expUnit = ManagerSingleton<MasterDataManager>.Instance.masterExperienceUnit;
+            UnitExpTable unitExpTable = expUnit[unit_level];
+            unit_exp = unitExpTable.total_exp + (int)(unitExpTable.next_exp * 0.9f);
+        }
         public int[] GetEquipList()
         {
             var  Result = new int[6] { -1, -1, -1, -1, -1, -1 };

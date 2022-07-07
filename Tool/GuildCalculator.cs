@@ -870,6 +870,7 @@ namespace PCRCalculator.Tool
         public List<ValueChangeData> bossMgcDefChangeDic = new List<ValueChangeData>();
         [JsonIgnore]
         public List<DamageGetData> clanTotalDamageList = new List<DamageGetData>();
+        //
         public List<List<float>> UBExecTime = new List<List<float>>();
         
         public List<int[]> AllUnitUBList = new List<int[]>();
@@ -909,6 +910,28 @@ namespace PCRCalculator.Tool
             AllRandomList = allRandomList;
             this.clanTotalDamageList = clanTotalDamageList;
             AllUnitUBList = allUnitUBList;
+        }
+        public void CreatePro()
+        {
+            if (timeType==0)
+            {
+                for (int i = 0; i < AllUnitUBList.Count; i++)
+                {
+                    int prop = AllUnitUBList[i][2];
+                    if (prop > 0)
+                    {
+                        int idx = playerGroupData.playerData.playrCharacters.FindIndex(x => x.unitId == AllUnitUBList[i][0]);
+                        if (idx != -1)
+                        {
+                            int idx2 = playerGroupData.UBExecTimeData[idx].FindIndex(x => x == AllUnitUBList[i][1]);
+                            if (idx2 != -1)
+                            {
+                                playerGroupData.UBExecTimeData[idx][idx2] += prop / 10.0f;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
     public class UBDetail

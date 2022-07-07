@@ -321,16 +321,20 @@ namespace PCRCalculator.Tool
                         r.Style.Border.Left.Color.SetColor(color0);
                         r.Style.Border.Right.Color.SetColor(color0);
                     }
-                    for (int ii = 0; ii < TimelineData.AllUnitUBList.Count; ii++)
+                    //从这里向存档写入ub顺序数据
+                    /*for (int ii = 0; ii < TimelineData.AllUnitUBList.Count; ii++)
                     {
                         var data00 = TimelineData.AllUnitUBList[ii];
                         worksheet0.Cells[10 + ii, 10].Value = data00[0];
                         worksheet0.Cells[10 + ii, 11].Value = data00[1];
                         worksheet0.Cells[10 + ii, 12].Value = data00[2];
+                    
+                    }*/
 
-                    }
 
                     debugPos = 1000;
+                    //package.Save();
+
                     // 添加一个sheet
                     ExcelWorksheet worksheet1 = package.Workbook.Worksheets.Add("基础数据");
                     string[] HeadNames = new string[18]
@@ -552,6 +556,8 @@ namespace PCRCalculator.Tool
                         lineNum++;
                     }
                     debugPos = 3000;
+                    //package.Save();
+
                     void MyAction0(string headName, string head2, int detailType, int charLong0 = 3, int detailAlong0 = 1, int detailBlong0 = 2)
                     {
                         ExcelWorksheet worksheet3 = package.Workbook.Worksheets.Add(headName);
@@ -634,6 +640,7 @@ namespace PCRCalculator.Tool
                     debugPos = 7000;
                     //MyAction0("角色伤害统计", "角色伤害统计", 6, 1, 1, 0);
                     debugPos = 8000;
+                    //package.Save();
 
                     ExcelWorksheet worksheet4 = package.Workbook.Worksheets.Add("savePage");
                     lineNum = 1;
@@ -643,6 +650,7 @@ namespace PCRCalculator.Tool
                     worksheet4.Cells[lineNum, 1].Value = "存档数据页，请勿修改此页面的任何数据，否则无法导入！";
                     lineNum++;
                     string TimeLineDataStr = JsonConvert.SerializeObject(TimelineData);
+                    PCRSettings.Instance.SaveDataToFile("excelTemp", TimelineData);
                     string hideData = DGBVSABFBF(TimeLineDataStr);
                     worksheet4.Cells[lineNum, 1, lineNum, 20].Merge = true;
                     worksheet4.Cells[lineNum, 1].Style.Font.Size = 12;
@@ -692,6 +700,7 @@ namespace PCRCalculator.Tool
                         }
                         lineNum++;
                     }*/
+                    //package.Save();
 
                     ExcelWorksheet worksheet6 = package.Workbook.Worksheets.Add("伤害曲线");
                     lineNum = 1;

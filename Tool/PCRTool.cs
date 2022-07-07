@@ -25,6 +25,7 @@ namespace PCRCalculator.Tool
             }
         }
         public SetBox.ManagerForm managerForm;
+        private UI.UnitEditForm unitEditForm;
         int selectTarget = 1;
 
         public static PCRTool Instance
@@ -65,8 +66,8 @@ namespace PCRCalculator.Tool
             else if (URL.Contains("load/index"))
             {
                 LoadData loadData = PCRSettings.Instance.loadData;
-                if (!PCRSettings.Instance.globalSetting.use1701)
-                    PCRSettings.Instance.loadData.data.Remove1701();
+                //if (!PCRSettings.Instance.globalSetting.use1701)
+                //    PCRSettings.Instance.loadData.data.Remove1701();
                 result = JsonConvert.SerializeObject(loadData);
             }
             else if (URL.Contains("home/index"))
@@ -192,6 +193,15 @@ namespace PCRCalculator.Tool
             {
                 var deck = new MyPageSet();
                 result = JsonConvert.SerializeObject(deck);
+            }
+            else if (URL.Contains("unit/automatic_enhance"))
+            {
+                int unitid = JsonConvert.DeserializeObject<AutomaticEnhancePostParam>(uploadJson).unit_id;
+                //instance.OpenUnitEditForm(unitid);
+                AutomaticEnhanceReceiveParam receiveParam = new AutomaticEnhanceReceiveParam();
+                //MessageBox.Show("请先设置角色属性，设置完毕再关闭此提示！");
+                receiveParam.data.unit_data = PCRSettings.Instance.GetUnitDataS(unitid);
+                result = JsonConvert.SerializeObject(receiveParam);
             }
 
             if (result == "ERROR")
@@ -373,6 +383,15 @@ namespace PCRCalculator.Tool
                 ClientLog.AccumulateClientLog($"下载文件{save}时出错:{ex}");
                 downloadingURLS.Remove(url);
             }
+        }
+        public void OpenUnitEditForm(int unitid,Action callBack)
+        {
+            ClientLog.AccumulateClientLog($"open{unitid}");
+            var data = PCRSettings.Instance.GetUnitDataS(unitid);
+            unitEditForm = new UI.UnitEditForm(data, PCRSettings.Instance.GetUnitLove(unitid), callBack);
+            //unitEditForm.Show();
+            //unitEditForm.Init(data, PCRSettings.Instance.GetUnitLove(unitid), () => { unitEditForm = null; });
+            unitEditForm.Show();
         }
     }
 }

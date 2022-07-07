@@ -14,7 +14,8 @@ namespace PCRCalculator.Tool
     public class HomeData
     {
         public DataHead data_headers;
-        public HomeDataBody data;
+        //public HomeDataBody data;
+        public object data;
         public HomeData() { }
         public HomeData(long time)
         {
@@ -24,7 +25,7 @@ namespace PCRCalculator.Tool
     }
     public class HomeDataBody
     {
-        public UnreasMsg unread_message_list = new UnreasMsg();
+        public UnreasMsg[] unread_message_list = new UnreasMsg[0];
         public int have_clan_battle_reward = 0;
         public LastFriendTime last_friend_time = new LastFriendTime();
         public List<object> missions = new List<object>();
@@ -32,7 +33,7 @@ namespace PCRCalculator.Tool
         public long daily_reset_time = 0;
         public UserClan user_clan = new UserClan();
         public int have_join_request = 0;
-        public List<Quest> quest_list = new List<Quest> { new Quest(11003001), new Quest(11004006) };
+        public List<Quest> quest_list = new List<Quest>();//new List<Quest> { new Quest(11003001), new Quest(11004006) };
         public Training training_quest_count = new Training();
         public Training training_quest_max_count = new Training();
         public int training_quest_pack_end_time = 0;
@@ -238,6 +239,7 @@ namespace PCRCalculator.Tool
         public object drj;
         public List<UserMyParty> user_my_party;
         public List<UserMyPartyTab> user_my_party_tab;
+        //public object user_my_quest;
         public long daily_reset_time;
         public object login_bonus_list;
         public int present_count;
@@ -261,6 +263,8 @@ namespace PCRCalculator.Tool
         public long ccb;
         public long pfm;
         public long tt;
+        public int errm = 250;
+        public long ubr = 100;
         public int my_page_exists;
         public List<MyPage> my_page = new List<MyPage>();
         public void ReplaceUnitList(List<UnitDataS> unit_list_change,int type)

@@ -28,7 +28,8 @@ namespace PCRCalculator.UI
         Dictionary<int, List<UnitStateInputData>> allUnitStateInputDic;
         Dictionary<int, List<UnitAbnormalStateChangeData>> allUnitAbnormalStateInputDic;
         List<ClickEvevtData> clickEventList = new List<ClickEvevtData>();
-        
+        Dictionary<string, int> comInfoDic = new Dictionary<string, int>();
+        string buff_all = "所有";
         private void showBuffCheck_CheckedChanged(object sender, EventArgs e)
         {
             Reflash();
@@ -39,6 +40,18 @@ namespace PCRCalculator.UI
             endframelogic = endframeLogic;
             this.allUnitAbnormalStateInputDic = allUnitAbnormalStateInputDic;
             this.allUnitStateInputDic = allUnitStateInputDic;
+            comboBox1.Items.Add(buff_all);
+            comInfoDic.Add(buff_all, 0);
+            foreach (object obj in Enum.GetValues(typeof(Elements.UnitCtrl.BuffParamKind)))
+            {
+                string objName = PCRBattle.Instance.GetBuffName((int)obj);
+                if (!comInfoDic.ContainsKey(objName))
+                {
+                    comboBox1.Items.Add(objName);
+                    comInfoDic.Add(objName, (int)obj);
+                }
+            
+            }
             /*int basePos = 0;
             foreach(int unitid in allUnitStateInputDic.Keys)
             {
@@ -64,7 +77,7 @@ namespace PCRCalculator.UI
                 {
                     abnormals = value;
                 }
-                unitTimeLineGroup.Init(name, timeType, basePos, showBuffCheck.Checked, allUnitStateInputDic[unitid], abnormals,clickEventList,SimpleBuff.Checked);
+                unitTimeLineGroup.Init(name, timeType, basePos, showBuffCheck.Checked,GetCombSelectBuff(), allUnitStateInputDic[unitid], abnormals,clickEventList,SimpleBuff.Checked);
                 unitTimeLineGroup.UpdateHeight(basePos);
                 basePos += unitTimeLineGroup.Height;
                 unitTimeLineGroupImages.Add(unitTimeLineGroup);
@@ -75,7 +88,10 @@ namespace PCRCalculator.UI
             pictureBox1.Image = image;
             //PCRSettings.Instance.SaveDataToFile("BUFF_RESULT", unitTimeLineGroupImages);
         }
-
+        private int GetCombSelectBuff()
+        {
+            return comInfoDic[(comboBox1.SelectedItem ?? buff_all).ToString()];
+        }
         private void label2_Click(object sender, EventArgs e)
         {
 
@@ -144,6 +160,11 @@ namespace PCRCalculator.UI
             StateDetailPage stateDetailPage = new StateDetailPage();
             stateDetailPage.Init(data);
             stateDetailPage.Show();
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Reflash();
         }
     }
     public enum TimeLabelType { LOGIC = 0, REAL = 1, LOGICINT = 2 }
@@ -423,7 +444,7 @@ namespace PCRCalculator.UI
         private List<ToEndAbnormalState> toEndAbnormalData = new List<ToEndAbnormalState>();
         private List<int> currentAbnormalButtonEndPosList = new List<int>();
         List<ClickEvevtData> clickEventList;
-        public void Init(string name, TimeLabelType timeType, int basePosY, bool showFuff, List<UnitStateInputData> unitStates, List<UnitAbnormalStateChangeData> unitAbnormals, List<ClickEvevtData> clickEventDic, bool simpleBuff = true)
+        public void Init(string name, TimeLabelType timeType, int basePosY, bool showFuff,int showType, List<UnitStateInputData> unitStates, List<UnitAbnormalStateChangeData> unitAbnormals, List<ClickEvevtData> clickEventDic, bool simpleBuff = true)
         {
             this.clickEventList = clickEventDic;
             unitName = name;
@@ -444,7 +465,8 @@ namespace PCRCalculator.UI
             if (showFuff)
                 foreach (var data in unitAbnormals)
                 {
-                    AddAbnormalStateButtons(data, () => { data.ShowDetail(); },simpleBuff);
+                    if (showType == 0 || (data.isBuff && data.BUFF_Type == showType))
+                        AddAbnormalStateButtons(data, () => { data.ShowDetail(); }, simpleBuff);
                 }
         }        
         public void UpdateHeight(int basePosY)

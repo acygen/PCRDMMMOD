@@ -128,7 +128,7 @@ namespace PCRCalculator.Tool
             topData = GetDataFromFile<ClanBattleTopData>("clan_battletop");
             bossInfoData = GetDataFromFile<ClanBattleBossInfo>("clan_battleboss_info");
             bossReloadData = GetDataFromFile<ClanBattleBossReload>("clan_battlereload_detail_info");
-            homeData = new HomeData(12345678);
+            homeData = GetDataFromFile<HomeData>("HomeIndex");
             clanData = new ClanData();
             SupportListData = new ClanBattleSupportListData();
 
@@ -380,22 +380,29 @@ namespace PCRCalculator.Tool
         }
         public string GetUnitNameByID(int unitid)
         {
-            if(unitNameDic.TryGetValue(unitid,out string value))
+            try
             {
-                return value;
+                if (unitNameDic.TryGetValue(unitid, out string value))
+                {
+                    return value;
+                }
+                if (unitid <= 200000 || (unitid >= 400000 && unitid <= 499999))
+                {
+                    var data1 = ManagerSingleton<Elements.MasterDataManager>.Instance.masterUnitData;
+                    if (data1.ContainsKey(unitid))
+                        return data1.Get(unitid).UnitName;
+                }
+                else
+                {
+                    var data2 = ManagerSingleton<Elements.MasterDataManager>.Instance.masterEnemyParameter;
+                    string name2 = data2.GetFromAllKind(unitid)?.name;
+                    if (!string.IsNullOrEmpty(name2))
+                        return name2;
+                }
             }
-            if (unitid <= 200000||(unitid>=400000&&unitid<=499999))
+            catch(Exception ex)
             {
-                var data1 = ManagerSingleton<Elements.MasterDataManager>.Instance.masterUnitData;
-                if (data1.ContainsKey(unitid))
-                    return data1.Get(unitid).UnitName;
-            }
-            else
-            {
-                var data2 = ManagerSingleton<Elements.MasterDataManager>.Instance.masterEnemyParameter;
-                string name2 = data2.GetFromAllKind(unitid)?.name;
-                if (!string.IsNullOrEmpty(name2))
-                    return name2;
+                Debug.Log(ex);
             }
             return unitid + "(UNKNOWN)";
         }
@@ -405,6 +412,11 @@ namespace PCRCalculator.Tool
             foreach (int unitid in unitids)
             {
                 UnitDataS unitDataS = loadData.data.unit_list.Find(a => a.id == unitid);
+                if (unitDataS == null)
+                {
+                    int orid = Elements.UnitUtility.GetOriginalUnitId(unitid);
+                    unitDataS = loadData.data.unit_list.Find(a => a.id == orid);
+                }
                 if (unitDataS != null)
                 {
                     var love0 = loadData.data.user_chara_info.Find(a => a.chara_id == unitid / 100);
@@ -524,6 +536,7 @@ namespace PCRCalculator.Tool
                     dd.Update(love);
             }
             ChangeLoveStoryInfo(unitid, love);
+            unitDataS.CreateExp();
         }
         public void ChangeLoveStoryInfo(int unitid, int love)
         {
@@ -543,6 +556,18 @@ namespace PCRCalculator.Tool
                 }
             }
             loadData.data.UpdataStoryId(addList, removeList);
+        }
+        public UnitDataS GetUnitDataS(int unitid)
+        {
+            return loadData.data.unit_list.Find(a => a.id == unitid);
+        }
+        public int GetUnitLove(int unitid)
+        {
+            if (lovedic.TryGetValue(unitid / 100, out var value))
+            {
+                return value.love_level;
+            }
+            return 0;
         }
         public void UpdateUnitName(int unitid,string name)
         {

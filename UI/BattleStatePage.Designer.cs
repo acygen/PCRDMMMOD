@@ -36,6 +36,7 @@ namespace PCRCalculator.UI
             this.panel1 = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.SimpleBuff = new System.Windows.Forms.CheckBox();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -43,9 +44,10 @@ namespace PCRCalculator.UI
             // timeType3
             // 
             this.timeType3.AutoSize = true;
-            this.timeType3.Location = new System.Drawing.Point(405, 12);
+            this.timeType3.Location = new System.Drawing.Point(688, 15);
+            this.timeType3.Margin = new System.Windows.Forms.Padding(4);
             this.timeType3.Name = "timeType3";
-            this.timeType3.Size = new System.Drawing.Size(59, 16);
+            this.timeType3.Size = new System.Drawing.Size(73, 19);
             this.timeType3.TabIndex = 9;
             this.timeType3.Text = "显示秒";
             this.timeType3.UseVisualStyleBackColor = true;
@@ -54,9 +56,10 @@ namespace PCRCalculator.UI
             // timeType2
             // 
             this.timeType2.AutoSize = true;
-            this.timeType2.Location = new System.Drawing.Point(316, 12);
+            this.timeType2.Location = new System.Drawing.Point(569, 15);
+            this.timeType2.Margin = new System.Windows.Forms.Padding(4);
             this.timeType2.Name = "timeType2";
-            this.timeType2.Size = new System.Drawing.Size(83, 16);
+            this.timeType2.Size = new System.Drawing.Size(103, 19);
             this.timeType2.TabIndex = 8;
             this.timeType2.Text = "显示渲染帧";
             this.timeType2.UseVisualStyleBackColor = true;
@@ -66,9 +69,10 @@ namespace PCRCalculator.UI
             // 
             this.timeType1.AutoSize = true;
             this.timeType1.Checked = true;
-            this.timeType1.Location = new System.Drawing.Point(227, 12);
+            this.timeType1.Location = new System.Drawing.Point(451, 15);
+            this.timeType1.Margin = new System.Windows.Forms.Padding(4);
             this.timeType1.Name = "timeType1";
-            this.timeType1.Size = new System.Drawing.Size(83, 16);
+            this.timeType1.Size = new System.Drawing.Size(103, 19);
             this.timeType1.TabIndex = 7;
             this.timeType1.TabStop = true;
             this.timeType1.Text = "显示逻辑帧";
@@ -78,9 +82,10 @@ namespace PCRCalculator.UI
             // showBuffCheck
             // 
             this.showBuffCheck.AutoSize = true;
-            this.showBuffCheck.Location = new System.Drawing.Point(8, 13);
+            this.showBuffCheck.Location = new System.Drawing.Point(11, 16);
+            this.showBuffCheck.Margin = new System.Windows.Forms.Padding(4);
             this.showBuffCheck.Name = "showBuffCheck";
-            this.showBuffCheck.Size = new System.Drawing.Size(84, 16);
+            this.showBuffCheck.Size = new System.Drawing.Size(106, 19);
             this.showBuffCheck.TabIndex = 6;
             this.showBuffCheck.Text = "显示BUFF条";
             this.showBuffCheck.UseVisualStyleBackColor = true;
@@ -94,14 +99,16 @@ namespace PCRCalculator.UI
             this.panel1.AutoScroll = true;
             this.panel1.AutoScrollMinSize = new System.Drawing.Size(4000, 999);
             this.panel1.Controls.Add(this.pictureBox1);
-            this.panel1.Location = new System.Drawing.Point(8, 35);
+            this.panel1.Location = new System.Drawing.Point(11, 44);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(881, 442);
+            this.panel1.Size = new System.Drawing.Size(1175, 552);
             this.panel1.TabIndex = 10;
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(4, 0);
+            this.pictureBox1.Location = new System.Drawing.Point(5, 0);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(874, 439);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -114,25 +121,39 @@ namespace PCRCalculator.UI
             this.SimpleBuff.AutoSize = true;
             this.SimpleBuff.Checked = true;
             this.SimpleBuff.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.SimpleBuff.Location = new System.Drawing.Point(98, 13);
+            this.SimpleBuff.Location = new System.Drawing.Point(131, 16);
+            this.SimpleBuff.Margin = new System.Windows.Forms.Padding(4);
             this.SimpleBuff.Name = "SimpleBuff";
-            this.SimpleBuff.Size = new System.Drawing.Size(96, 16);
+            this.SimpleBuff.Size = new System.Drawing.Size(121, 19);
             this.SimpleBuff.TabIndex = 11;
             this.SimpleBuff.Text = "折叠相同BUFF";
             this.SimpleBuff.UseVisualStyleBackColor = true;
             this.SimpleBuff.CheckedChanged += new System.EventHandler(this.SimpleBuff_CheckedChanged);
             // 
+            // comboBox1
+            // 
+            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(268, 14);
+            this.comboBox1.MaxDropDownItems = 50;
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(150, 23);
+            this.comboBox1.TabIndex = 12;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            // 
             // BattleStatePage
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(889, 514);
+            this.ClientSize = new System.Drawing.Size(1185, 642);
+            this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.SimpleBuff);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.timeType3);
             this.Controls.Add(this.timeType2);
             this.Controls.Add(this.timeType1);
             this.Controls.Add(this.showBuffCheck);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "BattleStatePage";
             this.Text = "BattleStatePage";
             this.panel1.ResumeLayout(false);
@@ -152,5 +173,6 @@ namespace PCRCalculator.UI
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.CheckBox SimpleBuff;
+        private System.Windows.Forms.ComboBox comboBox1;
     }
 }

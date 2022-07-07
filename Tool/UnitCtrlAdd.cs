@@ -28,7 +28,8 @@ namespace PCRCalculator.Hook
                 if(idx>=0&&idx<=battleManager.DJJKGCFKJNJ.Count)
                 {
                     var ub = PCRBattle.Instance.GetUbTimes(idx);
-                    SetUBExecTime(__instance, ub.Item1, PCRBattle.Instance.saveData.ubTryCount,ub.Item2);
+                    SetUBExecTime_new(__instance, ub.Item1, PCRBattle.Instance.saveData.ubTryCount, ub.Item2);
+                    //SetUBExecTime(__instance, ub.Item1, PCRBattle.Instance.saveData.ubTryCount,ub.Item2);
                 }
                 else
                 {
@@ -168,24 +169,75 @@ namespace PCRCalculator.Hook
         }
         public static IEnumerator UpdateUBExecTime_new(List<UBTimeData> times,bool isreal, int tryCount)
         {
-            int realTimeCount = 0;
+            //int realTimeCount = 0;
+            yield return null;
             if (times.Count <= 0)
             {
                 yield break;
             }
             yield return null;
             yield return null;
-            int lastFrame = 0;
-            int priority = 0;
+            //int lastFrame = 0;
+            //int priority = 0;
             Elements.Battle.BattleManager battleManager = Traverse.Create(times[0].unit).Field("staticBattleManager").GetValue<BattleManager>();
 
             float startRemainTime = Traverse.Create(battleManager).Field("startRemainTime").GetValue<float>();
             while (true)
             {
-                int currentFrame = isreal ? battleManager.JJCJONPDGIM : (int)((startRemainTime - battleManager.HIJKBOIEPFC)*60.0f);
-                if (currentFrame != lastFrame)
+                int currentLogicFrame = (int)((startRemainTime - battleManager.HIJKBOIEPFC)*60.0f);
+                int currentRealFrame = battleManager.JJCJONPDGIM;
+                int currentFrame = isreal ? currentRealFrame : currentLogicFrame;
+                Label0:
+                if (times.Count <= 0)
+                    yield break;
+                UBTimeData date = times[0];
+                if (date.ubTime <= currentFrame)
                 {
-                    realTimeCount = 0;
+                    if (date.execCount <= tryCount)
+                    {
+                        //if (isreal || date.prioruty <= priority)
+                        //{
+                        date.unit.IsUbExecTrying = true;
+                        Cute.ClientLog.AccumulateClientLog($"[{currentLogicFrame}/{currentRealFrame}]角色{date.unit.UnitId}尝试UB ({date.execCount}/{tryCount})");
+
+                        if (battleManager.GetBlackoutUnitTargetLength() <= 0)
+                        {
+                            date.execCount++;
+                        }
+                        else
+                        {
+                            if (battleManager.GetBlackoutUnitTarget(0).UnitId == date.unit.UnitId)
+                            {
+                                Cute.ClientLog.AccumulateClientLog($"[{currentLogicFrame}/{currentRealFrame}]检测到角色{date.unit.UnitId}正在UB，跳转下一个目标");
+                                times.RemoveAt(0);
+                                goto Label0;
+                            }
+                            //if (PCRBattle.Instance.IsUBExecd(date.unit.UnitId, currentFrame))
+                            if (date.unit.CurrentState == UnitCtrl.ActionState.SKILL_1)
+                            {
+                                //priority++;
+                                Cute.ClientLog.AccumulateClientLog($"[{currentLogicFrame}/{currentRealFrame}]检测到角色{date.unit.UnitId}处于UB状态，跳转下一个目标");
+                                date.execCount += 9999;
+                                times.RemoveAt(0);
+                                goto Label0;
+
+                            }
+                        }
+                        //}
+
+                    }
+                    else
+                    {
+                        Cute.ClientLog.AccumulateClientLog($"[{currentLogicFrame}/{currentRealFrame}]角色{date.unit.UnitId}UB尝试次数已满，跳转下一个目标");
+                        times.RemoveAt(0);
+                        goto Label0;
+
+                    }
+                }
+                
+                /*if (currentFrame != lastFrame)
+                {
+                    //realTimeCount = 0;
                     lastFrame = currentFrame;
                     priority = 0;
                 }
@@ -193,20 +245,20 @@ namespace PCRCalculator.Hook
                 {
                     if(date.ubTime<=currentFrame && date.execCount <= tryCount)
                     {
-                        //if (date.prioruty <= priority)
-                        //{
+                        if (isreal || date.prioruty <= priority)
+                        {
                             date.unit.IsUbExecTrying = true;
-                        if (battleManager.GetBlackoutUnitTargetLength() <= 0)
-                            date.execCount++;
-                            if (realTimeCount > 3 && date.unit.Energy < 700)
+                            if (battleManager.GetBlackoutUnitTargetLength() <= 0)
+                                date.execCount++;
+                            if (isreal || PCRBattle.Instance.IsUBExecd(date.unit.UnitId, currentFrame))
                             {
                                 priority++;
-                                date.execCount += 999;
+                                date.execCount += 9999;
                             }
-                        //}
+                        }
                     }
                 }
-                realTimeCount++;
+                //realTimeCount++;*/
                 yield return null;
             }
         }

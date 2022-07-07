@@ -91,6 +91,27 @@ namespace PCRCalculator.Tool
             Color.FromArgb(186,140,0,255),
             Color.FromArgb(86,255,0,51),
 };
+        public static Dictionary<Elements.UnitCtrl.BuffParamKind, string> BuffNameDic = new Dictionary<UnitCtrl.BuffParamKind, string>
+        {
+            {Elements.UnitCtrl.BuffParamKind.ACCURACY,"命中" },
+            {Elements.UnitCtrl.BuffParamKind.ATK,"攻击" },
+            {Elements.UnitCtrl.BuffParamKind.DEF,"防御" },
+            {Elements.UnitCtrl.BuffParamKind.DODGE,"闪避" },
+            {Elements.UnitCtrl.BuffParamKind.ENERGY_RECOVER_RATE,"TP上" },
+            {Elements.UnitCtrl.BuffParamKind.LIFE_STEAL,"吸血" },
+            {Elements.UnitCtrl.BuffParamKind.MAGIC_CRITICAL,"魔法暴击" },
+            {Elements.UnitCtrl.BuffParamKind.MAGIC_CRITICAL_DAMAGE_RATE,"魔法暴击伤害" },
+            {Elements.UnitCtrl.BuffParamKind.MAGIC_DEF,"魔法防御" },
+            {Elements.UnitCtrl.BuffParamKind.MAGIC_STR,"魔法攻击" },
+            {Elements.UnitCtrl.BuffParamKind.MAX_HP,"最大生命" },
+            {Elements.UnitCtrl.BuffParamKind.MOVE_SPEED,"移速" },
+            {Elements.UnitCtrl.BuffParamKind.PHYSICAL_CRITICAL,"物理暴击" },
+            {Elements.UnitCtrl.BuffParamKind.PHYSICAL_CRITICAL_DAMAGE_RATE,"物理暴击伤害" },
+            {Elements.UnitCtrl.BuffParamKind.RECEIVE_CRITICAL_DAMAGE_RATE,"受到物理暴击伤害" },
+            {Elements.UnitCtrl.BuffParamKind.RECEIVE_MAGIC_DAMAGE_PERCENT,"受到魔法暴击伤害" },
+            {Elements.UnitCtrl.BuffParamKind.RECEIVE_PHYSICAL_AND_MAGIC_DAMAGE_PERCENT,"受到暴击伤害" },
+            {Elements.UnitCtrl.BuffParamKind.RECEIVE_PHYSICAL_DAMAGE_PERCENT,"受到物理伤害比率" }
+        };
 
         public Dictionary<int, List<UnitStateChangeData>> allUnitStateChangeDic = new Dictionary<int, List<UnitStateChangeData>>();
         public Dictionary<int, List<UnitAbnormalStateChangeData>> allUnitAbnormalStateDic = new Dictionary<int, List<UnitAbnormalStateChangeData>>();
@@ -104,6 +125,7 @@ namespace PCRCalculator.Tool
         public List<ValueChangeData> bossDefChangeDic = new List<ValueChangeData>();
         public List<ValueChangeData> bossMgcDefChangeDic = new List<ValueChangeData>();
         public List<DamageGetData> clanBattleDamageList = new List<DamageGetData>();
+        public List<int[]> allUBTimes = new List<int[]>();
         public List<List<float>> ubTimes = new List<List<float>>();
         public List<List<float>> ubTimesReal = new List<List<float>>();
         public Dictionary<int, Dictionary<int, int>> allUnitSkillExecTimeDic = new Dictionary<int, Dictionary<int, int>>();
@@ -159,6 +181,25 @@ namespace PCRCalculator.Tool
             timelineData.playerGroupData.SortUbTimes();
             timelineData.timeType = isLogic ? 0 : 1;
             timelineData.timeLineName = name;
+            if (isLogic)
+            {
+                for(int i = 0; i < allUBTimes.Count; i++)
+                {
+                    int prop = allUBTimes[i][2];
+                    if (prop > 0)
+                    {
+                        int idx = PlayerIds.FindIndex(x => x == allUBTimes[i][0]);
+                        if(idx != -1)
+                        {
+                            int idx2 = timelineData.playerGroupData.UBExecTimeData[idx].FindIndex(x => x == allUBTimes[i][1]);
+                            if( idx2 != -1)
+                            {
+                                timelineData.playerGroupData.UBExecTimeData[idx][idx2] += prop / 10.0f;
+                            }
+                        }
+                    }
+                }
+            }
             saveData.timelineDatas.Add(timelineData);
             Save();
         }
@@ -184,6 +225,7 @@ namespace PCRCalculator.Tool
             totalDamageExcept = 0;
             isJJCBattle = isJJC;
             RandomSeed = seed;
+            allUBTimes.Clear();
             ubTimes.Clear();
             ubTimesReal.Clear();
             allUnitSkillExecTimeDic.Clear();
@@ -240,11 +282,26 @@ namespace PCRCalculator.Tool
                         PlayerIds.Add(unitid);
                 }
                 enemyUnitid = PCRSettings.staticBattleBanager.GetEnemyCtrl(0).UnitId;
+                List<LogData> allUBs = ReceivedLogList.FindAll(a => a.logType == 7 && a.sourceUnitID<200000);
+                for(int i = 0; i < allUBs.Count; i++)
+                {
+                    LogData data = allUBs[i];
+                    int[] dd = new int[3] { data.sourceUnitID, data.logicalFrame, 0 };
+                    int[] last = allUBTimes.Count > 0 ? allUBTimes[allUBTimes.Count - 1] : null;
+                    if (last!=null && last[1]==data.logicalFrame)
+                    {
+                        if (last[2] == 0)
+                            last[2]++;
+                        dd[2] = last[2] + 1;
+                    }
+                    allUBTimes.Add(dd);
+                }
+
                 foreach (UnitCtrl unit in PCRSettings.staticBattleBanager.OFMPGBKBOPM.UnitCtrls)
                 {
                     OnUnitHPChange(unit.UnitId, unit.IsOther, (int)unit.Hp);
                     OnUnitTPChange(unit);
-                    List<LogData> unitUB = ReceivedLogList.FindAll(a => a.logType == 7 && a.sourceUnitID == unit.UnitId);
+                    List<LogData> unitUB = allUBs.FindAll(a => a.logType == 7 && a.sourceUnitID == unit.UnitId);
                     List<float> times = new List<float>();
                     List<float> timesReal = new List<float>();
                     foreach (var data in unitUB)
@@ -1049,12 +1106,12 @@ namespace PCRCalculator.Tool
             {
                 if (PCRSettings.unitNameDic.TryGetValue(unitid, out var value))
                     return value;
-                result = data.masterUnitData.Get(unitid)?.UnitName;
+                result = data.masterUnitData.Get(unitid)?.UnitName ?? "???";
                 return result;
             }
             else
             {
-                return data.masterEnemyParameter.GetFromAllKind(unitid)?.name;
+                return data.masterEnemyParameter.GetFromAllKind(unitid)?.name ?? "???";
             }
         }
         public string GetBuffDes(int type)
@@ -1111,8 +1168,8 @@ namespace PCRCalculator.Tool
             //List<List<float>> UBTimes = CreateUBExecTimeData();
             for (int i = 0; i < 5; i++)
             {
-                if (i < PlayerIds.Count)
-                {
+                if (i < PlayerIds.Count && i<ubTimes.Count)
+                {                    
                     foreach (int tm in ubTimes[i])
                     {
                         //var unitData = players[i].unitData;
@@ -1122,17 +1179,25 @@ namespace PCRCalculator.Tool
                         detail.UBTime = (int)tm;
                         /*ValueChangeData changeData = allUnitHPDic[bossId].Find(
                             a => Mathf.RoundToInt(a.xValue * 5400) == tm);*/
-                        PlayerDamageData damageData = playerUnitDamageDic[PlayerIds[i]].Find(a => a.frame == tm && a.source == PlayerIds[i]);
-                        if (damageData != null)
+                        if (playerUnitDamageDic.ContainsKey(PlayerIds[i]))
                         {
-                            detail.Damage = (int)damageData.damage;
-                            detail.Critical = damageData.isCri;
+                            PlayerDamageData damageData = playerUnitDamageDic[PlayerIds[i]].Find(a => a.frame == tm && a.source == PlayerIds[i]);
+                            if (damageData != null)
+                            {
+                                detail.Damage = (int)damageData.damage;
+                                detail.Critical = damageData.isCri;
+                            }
+                            else
+                                detail.Damage = 0;
                         }
-                        else
-                            detail.Damage = 0;
                         uBDetails.Add(detail);
                     }
                 }
+            }
+            if (!allUnitStateChangeDic.ContainsKey(enemyUnitid))
+            {
+                ClientLog.AccumulateClientLog($"[ERROR]: id{enemyUnitid}不在角色状态字典{JsonConvert.SerializeObject(allUnitStateChangeDic)}中！\n");
+                return uBDetails;
             }
             foreach (var data in allUnitStateChangeDic[enemyUnitid])
             {
@@ -1154,7 +1219,7 @@ namespace PCRCalculator.Tool
             GuildPlayerGroupData groupData = new GuildPlayerGroupData(PCRSettings.Instance.CreateAddPlayerData(PlayerIds), ubTimes);
             GuildTimelineData timelineData = new GuildTimelineData(groupData, RandomSeed, allUnitStateChangeDic,
                 allUnitAbnormalStateDic, allUnitHPDic, allUnitTPDic, allUnitSkillExecDic, playerUnitDamageDic,
-                bossDefChangeDic, bossMgcDefChangeDic, new List<RandomData>(), clanBattleDamageList, new List<int[]>());
+                bossDefChangeDic, bossMgcDefChangeDic, new List<RandomData>(), clanBattleDamageList, allUBTimes);
             timelineData.UBExecTime = ubTimes;
             timelineData.exceptDamage = UnityEngine.Mathf.RoundToInt(totalDamageExcept / 10000);
             timelineData.backDamage = UnityEngine.Mathf.RoundToInt((totalDamage - totalDamageCriEX) / 10000);
@@ -1179,9 +1244,19 @@ namespace PCRCalculator.Tool
             if (!ubTimesInited && timeDatas.Count>0)
             {
                 Elements.Battle.BattleManager battleManager = HarmonyLib.Traverse.Create(timeDatas[0].unit).Field("staticBattleManager").GetValue<Elements.Battle.BattleManager>();
-                battleManager.AppendCoroutine(Hook.UnitCtrlAdd.UpdateUBExecTime_new(uBTimeDatas, !islogic, saveData.ubTryCount),ePauseType.SYSTEM);
+                battleManager.AppendCoroutine(Hook.UnitCtrlAdd.UpdateUBExecTime_new(uBTimeDatas, !islogic, saveData.ubTryCount),ePauseType.IGNORE_BLACK_OUT);
                 ubTimesInited = true;            
             }
+        }
+        public bool IsUBExecd(int unitid,int logicFrame)
+        {
+            var log = ReceivedLogList.Find(a => a.sourceUnitID == unitid && a.logicalFrame == logicFrame);
+            return log != null;
+        }
+        public string GetBuffName(int buffID)
+        {
+            Elements.UnitCtrl.BuffParamKind buff = (Elements.UnitCtrl.BuffParamKind)buffID;
+            return BuffNameDic.TryGetValue(buff, out var value) ? value : buff.ToString();
         }
     }
     public class LogData
@@ -1354,11 +1429,12 @@ namespace PCRCalculator.Tool
                 skillLevel[1] = dataS.main_skill[0].skill_level;
                 skillLevel[2] = dataS.main_skill[1].skill_level;
                 skillLevel[3] = dataS.ex_skill[0].skill_level;
-                uniqueEqLv = dataS.unique_equip_slot[0].GetLv();
+                if (dataS.unique_equip_slot.Count > 0)
+                    uniqueEqLv = dataS.unique_equip_slot[0].GetLv();
             }
             catch(Exception ex)
             {
-                Cute.ClientLog.AccumulateClientLog("ERROR WHEN INIT UNITDATA" + ex.Message + ex.StackTrace);
+                Cute.ClientLog.AccumulateClientLog($"ERROR WHEN INIT UNITDATA {JsonConvert.SerializeObject(dataS)}\n" + ex.Message + ex.StackTrace);
             }
         }
         public bool Equal(UnitData unit)

@@ -247,6 +247,7 @@ namespace PCRCalculator.UI
                     MessageBox.Show("错误：" + errmsg);
                     return;
                 }
+                data.CreatePro();
                 if (MainList.SelectedIndex < 0 || MainList.SelectedIndex >= list.Count)
                 {
                     list.Add(data);

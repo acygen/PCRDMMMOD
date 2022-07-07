@@ -81,7 +81,6 @@ namespace SetBox
         private Button button2;
         private Label label13;
         private Label label19;
-        private CheckBox checkBox1701;
         private Button button3;
         private CheckBox showUICheck;
         private CheckBox replaceURLCheck;
@@ -120,7 +119,7 @@ namespace SetBox
             useOwnDB.Checked = Settings.globalSetting.useDBinStreamingAssestPath;
             logWebJson.Checked = Settings.globalSetting.forceLogBattleStart;
             uselog.Checked = Settings.globalSetting.useLog;
-            checkBox1701.Checked = Settings.globalSetting.use1701;
+            //checkBox1701.Checked = Settings.globalSetting.use1701;
             replaceURLCheck.Checked = Settings.globalSetting.replaceManifestURL;
         }
         public void SaveMainSetting()
@@ -130,6 +129,7 @@ namespace SetBox
                 var loadIndex = Settings.loadData;
                 loadIndex.data.user_info.user_name = username_txt.Text;
                 loadIndex.data.user_info.team_level = int.Parse(unitlevel_txt.Text);
+
                 Settings.globalSetting.userAssestPath = assestPath_txt.Text;
                 Settings.globalSetting.useUserAssestPath = useUserPath_check.Checked;
                 Settings.globalSetting.ignoreManifestCheck = ignoreManifest.Checked;
@@ -139,7 +139,7 @@ namespace SetBox
                 Settings.globalSetting.useDBinStreamingAssestPath = useOwnDB.Checked;
                 Settings.globalSetting.forceLogBattleStart = logWebJson.Checked;
                 Settings.globalSetting.useLog = uselog.Checked;
-                Settings.globalSetting.use1701 = checkBox1701.Checked;
+                //Settings.globalSetting.use1701 = checkBox1701.Checked;
                 Settings.Save(1);
                 Settings.Save(4);
                 MessageBox.Show("设置更改成功！重启生效");
@@ -281,7 +281,6 @@ namespace SetBox
             this.label1 = new System.Windows.Forms.Label();
             this.MainSetting = new System.Windows.Forms.TabPage();
             this.replaceURLCheck = new System.Windows.Forms.CheckBox();
-            this.checkBox1701 = new System.Windows.Forms.CheckBox();
             this.uselog = new System.Windows.Forms.CheckBox();
             this.saveBaseSettingButton = new System.Windows.Forms.Button();
             this.logWebJson = new System.Windows.Forms.CheckBox();
@@ -315,6 +314,9 @@ namespace SetBox
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.logBox = new System.Windows.Forms.TextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.ConfigVersion = new System.Windows.Forms.Button();
+            this.label20 = new System.Windows.Forms.Label();
+            this.VersionText = new System.Windows.Forms.TextBox();
             this.button3 = new System.Windows.Forms.Button();
             this.label13 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
@@ -323,9 +325,6 @@ namespace SetBox
             this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.label16 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
-            this.VersionText = new System.Windows.Forms.TextBox();
-            this.label20 = new System.Windows.Forms.Label();
-            this.ConfigVersion = new System.Windows.Forms.Button();
             this.statusStrip1.SuspendLayout();
             this.clanSetting.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cb_seed)).BeginInit();
@@ -655,7 +654,6 @@ namespace SetBox
             // MainSetting
             // 
             this.MainSetting.Controls.Add(this.replaceURLCheck);
-            this.MainSetting.Controls.Add(this.checkBox1701);
             this.MainSetting.Controls.Add(this.uselog);
             this.MainSetting.Controls.Add(this.saveBaseSettingButton);
             this.MainSetting.Controls.Add(this.logWebJson);
@@ -688,17 +686,6 @@ namespace SetBox
             this.replaceURLCheck.Text = "将Manifest定向到本地";
             this.replaceURLCheck.UseVisualStyleBackColor = true;
             this.replaceURLCheck.CheckedChanged += new System.EventHandler(this.replaceURLCheck_CheckedChanged);
-            // 
-            // checkBox1701
-            // 
-            this.checkBox1701.AutoSize = true;
-            this.checkBox1701.Location = new System.Drawing.Point(23, 239);
-            this.checkBox1701.Name = "checkBox1701";
-            this.checkBox1701.Size = new System.Drawing.Size(114, 31);
-            this.checkBox1701.TabIndex = 15;
-            this.checkBox1701.Text = "使用环奈";
-            this.checkBox1701.UseVisualStyleBackColor = true;
-            this.checkBox1701.CheckedChanged += new System.EventHandler(this.checkBox1701_CheckedChanged);
             // 
             // uselog
             // 
@@ -1068,6 +1055,32 @@ namespace SetBox
             this.tabPage3.Text = "备用";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // ConfigVersion
+            // 
+            this.ConfigVersion.Location = new System.Drawing.Point(286, 256);
+            this.ConfigVersion.Name = "ConfigVersion";
+            this.ConfigVersion.Size = new System.Drawing.Size(227, 43);
+            this.ConfigVersion.TabIndex = 11;
+            this.ConfigVersion.Text = "更新版本号";
+            this.ConfigVersion.UseVisualStyleBackColor = true;
+            this.ConfigVersion.Click += new System.EventHandler(this.ConfigVersion_Click);
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(17, 263);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(98, 27);
+            this.label20.TabIndex = 10;
+            this.label20.Text = "版本号： ";
+            // 
+            // VersionText
+            // 
+            this.VersionText.Location = new System.Drawing.Point(101, 261);
+            this.VersionText.Name = "VersionText";
+            this.VersionText.Size = new System.Drawing.Size(179, 34);
+            this.VersionText.TabIndex = 9;
+            // 
             // button3
             // 
             this.button3.Enabled = false;
@@ -1150,32 +1163,6 @@ namespace SetBox
             this.textBox1.TabIndex = 1;
             this.textBox1.Text = "2021/06/25 10:00:00";
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
-            // 
-            // VersionText
-            // 
-            this.VersionText.Location = new System.Drawing.Point(101, 261);
-            this.VersionText.Name = "VersionText";
-            this.VersionText.Size = new System.Drawing.Size(179, 34);
-            this.VersionText.TabIndex = 9;
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(17, 263);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(98, 27);
-            this.label20.TabIndex = 10;
-            this.label20.Text = "版本号： ";
-            // 
-            // ConfigVersion
-            // 
-            this.ConfigVersion.Location = new System.Drawing.Point(286, 256);
-            this.ConfigVersion.Name = "ConfigVersion";
-            this.ConfigVersion.Size = new System.Drawing.Size(227, 43);
-            this.ConfigVersion.TabIndex = 11;
-            this.ConfigVersion.Text = "更新版本号";
-            this.ConfigVersion.UseVisualStyleBackColor = true;
-            this.ConfigVersion.Click += new System.EventHandler(this.ConfigVersion_Click);
             // 
             // ManagerForm
             // 
