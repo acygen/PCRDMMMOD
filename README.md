@@ -1,3 +1,2 @@
 # PCRDMMMOD
-公主连结DMM端MOD
-跑路中
+跑路
