@@ -879,9 +879,9 @@ namespace SetBox
             this.showUICheck.AutoSize = true;
             this.showUICheck.Location = new System.Drawing.Point(23, 209);
             this.showUICheck.Name = "showUICheck";
-            this.showUICheck.Size = new System.Drawing.Size(153, 31);
+            this.showUICheck.Size = new System.Drawing.Size(174, 31);
             this.showUICheck.TabIndex = 27;
-            this.showUICheck.Text = "实时buff显示";
+            this.showUICheck.Text = "不显示治疗数字";
             this.showUICheck.UseVisualStyleBackColor = true;
             this.showUICheck.CheckedChanged += new System.EventHandler(this.showUICheck_CheckedChanged);
             // 

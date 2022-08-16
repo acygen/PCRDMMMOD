@@ -7,6 +7,9 @@ using Cute;
 using Newtonsoft0.Json;
 using System.Drawing;
 using Elements;
+using PCRCalculator.Hook;
+using HarmonyLib;
+using System.Text.RegularExpressions;
 
 namespace PCRCalculator.Tool
 {
@@ -42,20 +45,20 @@ namespace PCRCalculator.Tool
 
         public static Color[] StateColors = new Color[14]
 {
-            Color.FromArgb(145,178,178,178),
-            Color.FromArgb(157,255,134,134),
-            Color.FromArgb(255,255,173,95),
-            Color.FromArgb(134,151,168,255),
-            Color.FromArgb(148,190,190,190),
-            Color.FromArgb(163,185,120,100),
-            Color.FromArgb(161,184,167,255),
-            Color.FromArgb(139,135,135,135),
-            Color.FromArgb(161,172,255,167),
-            Color.FromArgb(161,255,243,167),
-            Color.FromArgb(161,255,243,167),
-            Color.FromArgb(161,255,243,167),
-            Color.FromArgb(161,255,243,167),
-            Color.FromArgb(161,255,243,167),
+            Color.FromArgb(145,178,178,178),//0-idle
+            Color.FromArgb(157,255,134,134),//1-attack
+            Color.FromArgb(255,255,173,95),//2-ub
+            Color.FromArgb(134,151,168,255),//3-skill
+            Color.FromArgb(148,190,190,190),//4-walk
+            Color.FromArgb(163,185,120,100),//5-damage
+            Color.FromArgb(161,184,167,255),//6-summon
+            Color.FromArgb(139,135,135,135),//7-die
+            Color.FromArgb(161,172,255,167),//8-gamestart
+            Color.FromArgb(161,255,243,167),//9-lose
+            Color.FromArgb(161,255,243,167),//10
+            Color.FromArgb(161,255,243,167),//11
+            Color.FromArgb(161,255,243,167),//12
+            Color.FromArgb(161,255,243,167),//13
 };
         public static Color[] BuffColors = new Color[14]
 {
@@ -125,7 +128,7 @@ namespace PCRCalculator.Tool
         public List<ValueChangeData> bossDefChangeDic = new List<ValueChangeData>();
         public List<ValueChangeData> bossMgcDefChangeDic = new List<ValueChangeData>();
         public List<DamageGetData> clanBattleDamageList = new List<DamageGetData>();
-        public List<int[]> allUBTimes = new List<int[]>();
+        //public List<int[]> allUBTimes = new List<int[]>();
         public List<List<float>> ubTimes = new List<List<float>>();
         public List<List<float>> ubTimesReal = new List<List<float>>();
         public Dictionary<int, Dictionary<int, int>> allUnitSkillExecTimeDic = new Dictionary<int, Dictionary<int, int>>();
@@ -136,11 +139,28 @@ namespace PCRCalculator.Tool
         public List<int> PlayerIds = new List<int>();
         public int enemyUnitid;
         public string enemyDes = "??";
-        public List<Hook.UnitCtrlAdd.UBTimeData> uBTimeDatas = new List<Hook.UnitCtrlAdd.UBTimeData>();
+        private List<Hook.UnitCtrlAdd.UBTimeData> uBTimeDatas = new List<Hook.UnitCtrlAdd.UBTimeData>();
+        public List<UnitCtrlAdd.UBTimeData> UBTimeDatas { get => uBTimeDatas; set => uBTimeDatas = value; }
+
+        public bool UseUBTimeDatas { get; set; }
+        public Action OnUBTimeDataChanged { get; set; }
+        public Action OnReceivedLog { get; set; }
+        public bool AutoUBTimeDataIsLogic { get; set; }
+
+        public bool UseFakeCritical { get; set; }
+        public int FakeCritLev_player { get; set; }//己方受到的暴击几率调整
+        public int FakeCritLev_enemy { get; set; }//敌方受到的暴击几率调整
+
+        public int EnemyLastUBFrame { get; set; }//BOSS上一次UB时间
+
+        public Action OnUnitPropChange { get; set; }
+
         public bool ubTimesInited = false;
         public bool ubTimesIsLogic = true;
 
         public bool isJJCBattle = false;
+
+        private bool isUnitPropChange = false;
         public void Init()
         {
             saveData = PCRSettings.Instance.GetDataFromFile<BattleSaveData>("battleSaveData", true);
@@ -179,9 +199,10 @@ namespace PCRCalculator.Tool
             GuildTimelineData timelineData = new GuildTimelineData(1);
             timelineData.playerGroupData.UBExecTimeData = isLogic? ubTimes:ubTimesReal;
             timelineData.playerGroupData.SortUbTimes();
+            timelineData.playerGroupData.playerData = PCRSettings.Instance.CreateAddPlayerData(PlayerIds);
             timelineData.timeType = isLogic ? 0 : 1;
             timelineData.timeLineName = name;
-            if (isLogic)
+            /*if (isLogic)
             {
                 for(int i = 0; i < allUBTimes.Count; i++)
                 {
@@ -199,7 +220,11 @@ namespace PCRCalculator.Tool
                         }
                     }
                 }
-            }
+            }*/
+            timelineData.uBDetails = CreateUBDetailList();
+            timelineData.AllUnitUBList = CreateAllUBTimes(timelineData.uBDetails);
+            if (isLogic)
+                timelineData.CreatePro();
             saveData.timelineDatas.Add(timelineData);
             Save();
         }
@@ -225,16 +250,41 @@ namespace PCRCalculator.Tool
             totalDamageExcept = 0;
             isJJCBattle = isJJC;
             RandomSeed = seed;
-            allUBTimes.Clear();
+            //allUBTimes.Clear();
             ubTimes.Clear();
             ubTimesReal.Clear();
             allUnitSkillExecTimeDic.Clear();
             PlayerIds.Clear();
             enemyUnitid = 0;
             this.enemyDes = bossDes;
-            uBTimeDatas.Clear();
+            UBTimeDatas.Clear();
             ubTimesInited = false;
             //ShowPCRUI.LoadUI();
+            UseUBTimeDatas = PCRBattle.Instance.saveData.useUBSet;
+            OnUBTimeDataChanged = null;
+            OnReceivedLog = null;
+            UseFakeCritical = false;
+            FakeCritLev_enemy = 0;
+            FakeCritLev_player = 0;
+            EnemyLastUBFrame = 0;
+            OnUnitPropChange = null;
+            OpenBattleSettingPage();
+        }
+        private void OpenBattleSettingPage()
+        {
+            resultPage?.Close();
+            resultPage = new UI.BattleResultUI();
+            resultPage.Show();
+            //resultPage.Init(ReceivedLogList, allUnitStateInputDic, allUnitAbnormalStateInputDic);
+            resultPage.InitOnBattleStart(UseUBTimeDatas);
+        }
+        public void Update()
+        {
+            if (isUnitPropChange)
+            {
+                OnUnitPropChange?.Invoke();
+                isUnitPropChange = false;
+            }
         }
         public void OnBattleFinish(int frameLogic,int frameReal)
         {
@@ -247,7 +297,7 @@ namespace PCRCalculator.Tool
                     logData.SetTargetUnitId(unitid);
                     logData.SetType(8);
                     logData.SetFrame(frameReal);
-                    AppendLog(logData, frameLogic);
+                    AppendLog(logData, frameLogic,null);
                     if (allUnitAbnormalStateDic.ContainsKey(unitid))
                     {
                         foreach (var changeData in allUnitAbnormalStateDic[unitid])
@@ -283,7 +333,7 @@ namespace PCRCalculator.Tool
                 }
                 enemyUnitid = PCRSettings.staticBattleBanager.GetEnemyCtrl(0).UnitId;
                 List<LogData> allUBs = ReceivedLogList.FindAll(a => a.logType == 7 && a.sourceUnitID<200000);
-                for(int i = 0; i < allUBs.Count; i++)
+                /*for(int i = 0; i < allUBs.Count; i++)
                 {
                     LogData data = allUBs[i];
                     int[] dd = new int[3] { data.sourceUnitID, data.logicalFrame, 0 };
@@ -295,12 +345,12 @@ namespace PCRCalculator.Tool
                         dd[2] = last[2] + 1;
                     }
                     allUBTimes.Add(dd);
-                }
+                }*/
 
                 foreach (UnitCtrl unit in PCRSettings.staticBattleBanager.OFMPGBKBOPM.UnitCtrls)
                 {
-                    OnUnitHPChange(unit.UnitId, unit.IsOther, (int)unit.Hp);
-                    OnUnitTPChange(unit);
+                    OnUnitHPChange(unit.UnitId, unit.IsOther, (int)unit.Hp,"战斗结束");
+                    OnUnitTPChange(unit.UnitId,unit.Energy,"战斗结束");
                     List<LogData> unitUB = allUBs.FindAll(a => a.logType == 7 && a.sourceUnitID == unit.UnitId);
                     List<float> times = new List<float>();
                     List<float> timesReal = new List<float>();
@@ -362,11 +412,11 @@ namespace PCRCalculator.Tool
                         {
                             foreach (var parts in enemy.BossPartsListForBattle)
                             {
-                                OnBossDEFChange(enemy, parts.Index, true);
+                                OnBossDEFChange(enemy, "战斗结束", parts.Index, true);
                             }
                         }
                         else
-                            OnBossDEFChange(enemy, 0, true);
+                            OnBossDEFChange(enemy, "战斗结束", 0, true);
                         //OnUnitHPChange(enemy.UnitId, enemy.IsOther, (int)enemy.Hp);
                     }
                 }
@@ -376,35 +426,41 @@ namespace PCRCalculator.Tool
                 Cute.ClientLog.AccumulateClientLog("结束战斗时出错！" + ex.Message);
             }
         }
-        public void OnUnitHPChange(int unitid,bool isOther,int hp)
+        public void OnUnitHPChange(int unitid,bool isOther,int hp,string describe)
         {
             if (isJJCBattle)
                 return;
+            
             int exectTime = UnityEngine.Mathf.RoundToInt((battleTotalTime - PCRSettings.staticBattleBanager.HIJKBOIEPFC) * 60);
-            ValueChangeData changeData = new ValueChangeData(exectTime, hp);
+            ValueChangeData changeData = new ValueChangeData(exectTime, hp,describe);
             if (allUnitHPDic.TryGetValue(unitid, out var list))
             {
                 list.Add(changeData);
             }
             else
                 allUnitHPDic.Add(unitid, new List<ValueChangeData> { changeData });
+            //OnUnitPropChange?.Invoke();
+            isUnitPropChange = true;
         }
-        public void OnUnitTPChange(UnitCtrl unit)
+        public void OnUnitTPChange(int unitId,float energy,string describe)
         {
             if (isJJCBattle)
                 return;
             int exectTime = UnityEngine.Mathf.RoundToInt((battleTotalTime - PCRSettings.staticBattleBanager.HIJKBOIEPFC) * 60);
-            ValueChangeData changeData = new ValueChangeData(exectTime, unit.Energy);
-            if (allUnitTPDic.TryGetValue(unit.UnitId, out var list))
+            ValueChangeData changeData = new ValueChangeData(exectTime, energy,describe);
+            if (allUnitTPDic.TryGetValue(unitId, out var list))
             {
                 list.Add(changeData);
             }
             else
-                allUnitTPDic.Add(unit.UnitId, new List<ValueChangeData> { changeData });
+                allUnitTPDic.Add(unitId, new List<ValueChangeData> { changeData });
+            //OnUnitPropChange?.Invoke();
+            isUnitPropChange = true;
+
         }
-        public void OnBossDEFChange(UnitCtrl unit,int partsIndex = 0,bool forceAdd = false)
+        public void OnBossDEFChange(UnitCtrl unit,string des,int partsIndex = 0,bool forceAdd = false)
         {
-            if (isJJCBattle||!unit.IsBoss)
+            if (isJJCBattle)
                 return;
             int exectTime = UnityEngine.Mathf.RoundToInt((battleTotalTime - PCRSettings.staticBattleBanager.HIJKBOIEPFC) * 60);
             
@@ -422,14 +478,14 @@ namespace PCRCalculator.Tool
 
                  if (changeData2==null||forceAdd)
                  {
-                     ValueChangeData changeData = new ValueChangeData(partsIndex, exectTime, b, 0, "");
+                     ValueChangeData changeData = new ValueChangeData(partsIndex, exectTime, b, 0, des);
                      a.Add(changeData);
                  }
                  else
                  {
                      if (b != changeData2.yValue)
                      {
-                         ValueChangeData changeData3 = new ValueChangeData(partsIndex, exectTime, b, 0, "");
+                         ValueChangeData changeData3 = new ValueChangeData(partsIndex, exectTime, b, 0, des);
                          a.Add(changeData3);
                      }
                  }
@@ -485,10 +541,11 @@ namespace PCRCalculator.Tool
         {
             if (isJJCBattle || logData.battle_log_type == 5 && logData.value3 < 100)
                 return;
-            ReceivedLogList.Add(CreateLogData(logData, logicFrame));
-            AppendLog(logData, logicFrame);
+            LogData data = CreateLogData(logData, logicFrame);
+            ReceivedLogList.Add(data);
+            AppendLog(logData, logicFrame,data);
         }
-        public void AppendLog(Elements.BattleLogData logData,int frame)
+        public void AppendLog(Elements.BattleLogData logData,int frame,LogData data)
         {
             /*if (PCRSettings.staticBattleBanager.JILIICMHLCH != eBattleCategory.CLAN_BATTLE)
             {
@@ -544,14 +601,17 @@ namespace PCRCalculator.Tool
                     }
                     break;
                 case eBattleLogType.SET_DAMAGE:
-                    try
+                    /*try
                     {
-                        OnUnitHPChange(logData.target_unit_id, false,(int)logData.current_value);
+                        
+                        PlayerDamageData damageData = new PlayerDamageData(data.logicalFrame,data.realFrame,logData.value1 ,logData.type<20,0,0,logData.action_id);
+                        OnReceiveDamage(logData.target_unit_id, logData.source_unit_id, damageData);
+                        OnUnitHPChange(logData.target_unit_id, false,(int)logData.current_value,data.des2);
                     }
                     catch (System.Exception e)
                     {
                         Cute.ClientLog.AccumulateClientLog("添加角色伤害时出错！" + e.Message);
-                    }
+                    }*/
                     break;
                 case eBattleLogType.MISS:
                     try
@@ -565,9 +625,9 @@ namespace PCRCalculator.Tool
                                 if (skillExec != null)
                                 {
                                     var list = skillExec.actionExecDatas.FindAll(a => a.execTimeReal == logData.frame);
-                                    foreach(var data in list)
+                                    foreach(var data0 in list)
                                     {
-                                        data.describe += ((eMissLogType)logData.type).GetDescription();
+                                        data0.describe += ((eMissLogType)logData.type).GetDescription();
                                     }
                                 }
                             }
@@ -577,7 +637,17 @@ namespace PCRCalculator.Tool
                     {
                         Cute.ClientLog.AccumulateClientLog("添加MISS时出错！" + e.Message);
                     }
-                    break; 
+                    break;
+                case eBattleLogType.SET_ENERGY:
+                    try
+                    {
+                        OnUnitTPChange(logData.target_unit_id, logData.current_value, data.des2);
+                    }
+                    catch (System.Exception e)
+                    {
+                        Cute.ClientLog.AccumulateClientLog("添加energy时出错！" + e.Message);
+                    }
+                    break;
 
 
 
@@ -680,15 +750,20 @@ namespace PCRCalculator.Tool
                 allUnitAbnormalStateInputDic[unitid].Add(changeData);
                 allUnitAbnormalStateDic[unitid].Remove(changeData);
             }
+            //OnUnitPropChange?.Invoke();
+            isUnitPropChange = true;
+
         }
         public void ReceiveBattleLog(string json)
         {
             if (isJJCBattle)
                 return;
             //BattleLogReceiveData data = JsonConvert.DeserializeObject<BattleLogReceiveData>(json);
-            resultPage?.Close();
-            resultPage = new UI.BattleResultUI();
-            resultPage.Show();
+            if (resultPage == null)
+            {
+                resultPage = new UI.BattleResultUI();
+                resultPage.Show();
+            }
             resultPage.Init(ReceivedLogList,allUnitStateInputDic,allUnitAbnormalStateInputDic);
         }
         public void UpdateClanBattleFinish(ClanBattleFinishReceiveData data)
@@ -698,6 +773,7 @@ namespace PCRCalculator.Tool
         public LogData CreateLogData(Elements.BattleLogData logData,int logicFrame)
         {
             string describe = "";
+            string des2 = "";
             int colorType = 0;
             int source_unit_id = 0;
             int target_unit_id = 0;
@@ -755,6 +831,7 @@ namespace PCRCalculator.Tool
                         }
                         if (value1 > 0)
                             describe += "值" + value1;
+                        des2 = "MISS";
                         break;
                     case eBattleLogType.SET_DAMAGE:
                         if (frame == 0)
@@ -771,6 +848,7 @@ namespace PCRCalculator.Tool
                         if (!string.IsNullOrEmpty(sourceName))
                         {
                             describe += sourceName;
+                            des2 = $"来自:{sourceName}";
                         }
                         if (!string.IsNullOrEmpty(actionname))
                         {
@@ -839,6 +917,7 @@ namespace PCRCalculator.Tool
                         break;
                     case eBattleLogType.SET_ENERGY:
                         describe += targetName + "通过" + ((eSetEnergyType)type).GetDescription() + "将TP变为" + current_value;
+                        des2 = ((eSetEnergyType)type).GetDescription();
                         break;
                     case eBattleLogType.DAMAGE_CHARGE:
                         describe += "未知log";
@@ -886,7 +965,9 @@ namespace PCRCalculator.Tool
                 describe += "ERROR!" + ex.Message;
             }
             //logBox.AppendTextColorful(describe + "\n", Colors[colorType], false);
-            return new LogData(describe, colorType, target_unit_id,logicFrame,frame);
+            var dd = new LogData(describe, colorType, target_unit_id,logicFrame,frame);
+            dd.des2 = string.IsNullOrEmpty(des2) ? describe : des2;
+            return dd;
         }
         public LogData CreateLogData(string log)
         {
@@ -1094,10 +1175,19 @@ namespace PCRCalculator.Tool
             PCRSettings.Instance.SaveDataToFile("Chart/ChartSaveData",chartSaveData);
             return UnityEngine.Application.streamingAssetsPath + "/Chart/ChartSaveData";
         }
-
+        public UnitCtrl GetUnitCtrlById(int unitid)
+        {
+            foreach (UnitCtrl unit in PCRSettings.staticBattleBanager.OFMPGBKBOPM.UnitCtrls)
+            {
+                if (unit.UnitId == unitid)
+                    return unit;
+            }
+            return null;
+        }
         public string GetName(int unitid)
         {
-            string result = "";
+            return PCRSettings.Instance.GetUnitNameByID(unitid);
+            /**string result = "";
             if (unitid <= 0)
                 return result;
             var data = Elements.ManagerSingleton<Elements.MasterDataManager>.Instance;
@@ -1112,7 +1202,7 @@ namespace PCRCalculator.Tool
             else
             {
                 return data.masterEnemyParameter.GetFromAllKind(unitid)?.name ?? "???";
-            }
+            }*/
         }
         public string GetBuffDes(int type)
         {
@@ -1170,15 +1260,15 @@ namespace PCRCalculator.Tool
             {
                 if (i < PlayerIds.Count && i<ubTimes.Count)
                 {                    
-                    foreach (int tm in ubTimes[i])
+                    /*foreach (int tm in ubTimes[i])
                     {
                         //var unitData = players[i].unitData;
                         UBDetail detail = new UBDetail();
                         //detail.unitData = unitData;
                         detail.unitid = PlayerIds[i];
                         detail.UBTime = (int)tm;
-                        /*ValueChangeData changeData = allUnitHPDic[bossId].Find(
-                            a => Mathf.RoundToInt(a.xValue * 5400) == tm);*/
+                        //ValueChangeData changeData = allUnitHPDic[bossId].Find(
+                         //   a => Mathf.RoundToInt(a.xValue * 5400) == tm);
                         if (playerUnitDamageDic.ContainsKey(PlayerIds[i]))
                         {
                             PlayerDamageData damageData = playerUnitDamageDic[PlayerIds[i]].Find(a => a.frame == tm && a.source == PlayerIds[i]);
@@ -1191,27 +1281,95 @@ namespace PCRCalculator.Tool
                                 detail.Damage = 0;
                         }
                         uBDetails.Add(detail);
+                    }*/
+                    int unitid = PlayerIds[i];
+                    if (allUnitStateChangeDic.ContainsKey(unitid))
+                    {
+                        foreach (var data in allUnitStateChangeDic[unitid])
+                        {
+                            if (data.changStateTo == UnitCtrl.ActionState.SKILL_1)
+                            {
+                                UBDetail detail = new UBDetail();
+                                detail.isBossUB = false;
+                                detail.unitid = unitid;
+                                detail.UBTime = data.currentFrameCount;
+                                detail.UBTimeReal = data.currentFrameReal;
+
+                                if (playerUnitDamageDic.ContainsKey(PlayerIds[i]))
+                                {
+                                    PlayerDamageData damageData = playerUnitDamageDic[PlayerIds[i]].Find(a => a.frame == detail.UBTime && a.source == unitid);
+                                    if (damageData != null)
+                                    {
+                                        detail.Damage = (int)damageData.damage;
+                                        detail.Critical = damageData.isCri;
+                                    }
+                                    else
+                                        detail.Damage = 0;
+                                }
+
+                                uBDetails.Add(detail);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        ClientLog.AccumulateClientLog($"[ERROR]: id{unitid}不在角色状态字典{JsonConvert.SerializeObject(allUnitStateChangeDic)}中！\n");
                     }
                 }
             }
             if (!allUnitStateChangeDic.ContainsKey(enemyUnitid))
             {
                 ClientLog.AccumulateClientLog($"[ERROR]: id{enemyUnitid}不在角色状态字典{JsonConvert.SerializeObject(allUnitStateChangeDic)}中！\n");
-                return uBDetails;
             }
-            foreach (var data in allUnitStateChangeDic[enemyUnitid])
+            else
             {
-                if (data.changStateTo == UnitCtrl.ActionState.SKILL_1)
+                foreach (var data in allUnitStateChangeDic[enemyUnitid])
                 {
-                    UBDetail detail = new UBDetail();
-                    detail.isBossUB = true;
-                    detail.UBTime = data.currentFrameCount;
-                    uBDetails.Add(detail);
+                    if (data.changStateTo == UnitCtrl.ActionState.SKILL_1)
+                    {
+                        UBDetail detail = new UBDetail();
+                        detail.isBossUB = true;
+                        detail.unitid = enemyUnitid;
+                        detail.UBTime = data.currentFrameCount;
+                        detail.UBTimeReal = data.currentFrameReal;
+                        uBDetails.Add(detail);
+                    }
                 }
             }
+            uBDetails.Sort((a, b) => a.UBTimeReal - b.UBTimeReal);
             return uBDetails;
         }
+        public List<int[]> CreateAllUBTimes(List<UBDetail> uBDetails)
+        {
+            List<int[]> result = new List<int[]>();
+            foreach(var detail in uBDetails)
+            {
+                int frame = detail.UBTime;
+                int propoty = 0;
+                if (result.Count > 0 )
+                {
+                    int[] last = result[result.Count - 1];
+                    if (last[1] == frame)
+                    {
+                        if (last[2] == 0)
+                            last[2]++;
+                        int lp = last[2] > 10 ? last[2] / 10 : last[2];
+                        propoty = lp + 1;
 
+                        if (last[0] > 199999)
+                        {
+                            propoty = propoty * 10 + 1;
+                        }
+                        
+
+                        
+                    }
+                }
+                int[] ub = new int[3] { detail.unitid, detail.UBTime, propoty };
+                result.Add(ub);
+            }
+            return result;
+        }
         public void CallExcelHelper()
         {
             string fileName = CreateExcelName();
@@ -1219,22 +1377,33 @@ namespace PCRCalculator.Tool
             GuildPlayerGroupData groupData = new GuildPlayerGroupData(PCRSettings.Instance.CreateAddPlayerData(PlayerIds), ubTimes);
             GuildTimelineData timelineData = new GuildTimelineData(groupData, RandomSeed, allUnitStateChangeDic,
                 allUnitAbnormalStateDic, allUnitHPDic, allUnitTPDic, allUnitSkillExecDic, playerUnitDamageDic,
-                bossDefChangeDic, bossMgcDefChangeDic, new List<RandomData>(), clanBattleDamageList, allUBTimes);
-            timelineData.UBExecTime = ubTimes;
+                bossDefChangeDic, bossMgcDefChangeDic, new List<RandomData>(), clanBattleDamageList,null);
+            timelineData.allUnitStateInputDic = allUnitStateInputDic;
+            //timelineData.UBExecTime = ubTimes;
             timelineData.exceptDamage = UnityEngine.Mathf.RoundToInt(totalDamageExcept / 10000);
             timelineData.backDamage = UnityEngine.Mathf.RoundToInt((totalDamage - totalDamageCriEX) / 10000);
             //timelineData.charImages = PCRCaculator.Battle.BattleUIManager.Instance.GetCharactersImage();
             //string fileName = CreateExcelName();
             timelineData.timeLineName = CreateExcelName();
             timelineData.uBDetails = CreateUBDetailList();
+            timelineData.AllUnitUBList = CreateAllUBTimes(timelineData.uBDetails);
+            try
+            {
+                string tempSTR = timelineData.GetDebugText();
+                System.IO.File.WriteAllText($"{UnityEngine.Application.streamingAssetsPath}/ExcelTemp.json", tempSTR);
+            }
+            catch(Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show($"写入临时文件失败！{ex.Message}");
+            }
             EXCELHelper.OutputGuildTimeLine(timelineData, fileName);
             //MainManager.Instance.WindowConfigMessage("成功！", null, null);
 
         }
         public void AddUBTimes(List<Hook.UnitCtrlAdd.UBTimeData> timeDatas,bool islogic)
         {
-            uBTimeDatas.AddRange(timeDatas);
-            uBTimeDatas.Sort((a, b) =>
+            UBTimeDatas.AddRange(timeDatas);
+            UBTimeDatas.Sort((a, b) =>
             {
                 if (a.ubTime != b.ubTime)
                     return a.ubTime - b.ubTime;
@@ -1244,14 +1413,77 @@ namespace PCRCalculator.Tool
             if (!ubTimesInited && timeDatas.Count>0)
             {
                 Elements.Battle.BattleManager battleManager = HarmonyLib.Traverse.Create(timeDatas[0].unit).Field("staticBattleManager").GetValue<Elements.Battle.BattleManager>();
-                battleManager.AppendCoroutine(Hook.UnitCtrlAdd.UpdateUBExecTime_new(uBTimeDatas, !islogic, saveData.ubTryCount),ePauseType.IGNORE_BLACK_OUT);
+                battleManager.AppendCoroutine(Hook.UnitCtrlAdd.UpdateUBExecTime_new(!islogic, saveData.ubTryCount,OnUBTimeDataChanged),ePauseType.IGNORE_BLACK_OUT);
                 ubTimesInited = true;            
             }
+            AutoUBTimeDataIsLogic = islogic;
+            OnUBTimeDataChanged?.Invoke();
+        }
+        public void SwitchUBTimeEnable()
+        {
+            if (UseUBTimeDatas)
+            {
+                UseUBTimeDatas = false;
+            }
+            else
+            {
+                Elements.Battle.BattleManager battleManager = PCRSettings.staticBattleBanager;
+
+                float startRemainTime = Traverse.Create(battleManager).Field("startRemainTime").GetValue<float>();
+                int currentLogicFrame = (int)((startRemainTime - battleManager.HIJKBOIEPFC) * 60.0f);
+                int currentRealFrame = battleManager.JJCJONPDGIM;
+                int currentFrame = AutoUBTimeDataIsLogic ? currentLogicFrame : currentRealFrame;
+                for (int i = UBTimeDatas.Count - 1; i >= 0; i--)
+                {
+                    if (UBTimeDatas[i].ubTime < currentFrame)
+                    {
+                        UBTimeDatas.RemoveAt(i);
+                    }
+                }
+                UseUBTimeDatas = true;
+            }
+        }
+        public void RebuildUBTimeData(string text)
+        {
+            string[] lines = text.Split('\n');
+            List<UnitCtrlAdd.UBTimeData> list = new List<UnitCtrlAdd.UBTimeData>();
+            foreach(string line in lines)
+            {
+                if (line.Length > 10)
+                {
+                    Regex regex1 = new Regex(@"\[\w+\]");
+                    var str1 = regex1.Match(line)?.Value.Replace("[", "").Replace("]", "");
+                    bool waitBoss = str1.Contains("*");
+                    Regex regex2 = new Regex(@"\(\w+\)");
+                    var str2 = regex2.Match(line)?.Value.Replace("(", "").Replace(")", "");
+                    //Cute.ClientLog.AccumulateClientLog($"{line}->{str1}-{str2}");
+                    if (int.TryParse(str1.Replace("*",""), out int frame) && int.TryParse(str2, out int unitid))
+                    {
+                        UnitCtrlAdd.UBTimeData timeData = new UnitCtrlAdd.UBTimeData(frame, 0, GetUnitCtrlInstance(unitid));
+                        timeData.waitBOSSUB = waitBoss;
+                        if (timeData.unit != null)
+                            list.Add(timeData);
+                    }
+                    else
+                    {
+                        throw new Exception($"匹配字符串{str1}/{str2}错误！");
+                    }
+                }
+            }
+            UBTimeDatas = list;
+        }
+        private UnitCtrl GetUnitCtrlInstance(int unitid)
+        {
+            return PCRSettings.staticBattleBanager.GetMyUnitList().Find(a=>a.UnitId==unitid);
         }
         public bool IsUBExecd(int unitid,int logicFrame)
         {
-            var log = ReceivedLogList.Find(a => a.sourceUnitID == unitid && a.logicalFrame == logicFrame);
+            var log = ReceivedLogList.FindLast(a => a.sourceUnitID == unitid && a.logicalFrame == logicFrame && a.logType == 6 );
             return log != null;
+        }
+        public bool IsBossUBExecd(int logicFrame)
+        {
+            return EnemyLastUBFrame == logicFrame;
         }
         public string GetBuffName(int buffID)
         {
@@ -1269,7 +1501,7 @@ namespace PCRCalculator.Tool
         public string Des_real => "(" + realFrame + ")" + describe;
         public string Des_logic => "[" + logicalFrame + "]" + describe;
         public string Des => "[" + logicalFrame + "/" + realFrame + "]" + describe;
-
+        public string des2;
 
         public LogData(string describe, int logType, int sourceUnitID, int logicalFrame = 0, int realFrame = 0)
         {

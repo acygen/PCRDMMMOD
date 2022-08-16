@@ -718,6 +718,10 @@ namespace PCRCalculator.Tool
             this.xValue = x;
             this.yValue = y;
         }
+        public ValueChangeData(float xValue, float yValue,string describe) : this(xValue, yValue)
+        {
+            this.describe = describe;
+        }
 
         public ValueChangeData(float x, float y, int hp, string describe)
         {
@@ -762,6 +766,7 @@ namespace PCRCalculator.Tool
         public int unitid;
         public string UnitName;
         public int skillID;
+        public int skillID2;
         public SkillState skillState;//0-正常，1-被取消
         public string skillName;
         public int startTime;
@@ -853,6 +858,8 @@ namespace PCRCalculator.Tool
         public int currentRandomSeed;
         public GuildPlayerGroupData playerGroupData;
         [JsonIgnore]
+        public Dictionary<int, List<UnitStateInputData>> allUnitStateInputDic = new Dictionary<int, List<UnitStateInputData>>();
+        [JsonIgnore]
         public Dictionary<int, List<UnitStateChangeData>> allUnitStateChangeDic = new Dictionary<int, List<UnitStateChangeData>>();
         [JsonIgnore]
         public Dictionary<int, List<UnitAbnormalStateChangeData>> allUnitAbnormalStateDic = new Dictionary<int, List<UnitAbnormalStateChangeData>>();
@@ -871,7 +878,7 @@ namespace PCRCalculator.Tool
         [JsonIgnore]
         public List<DamageGetData> clanTotalDamageList = new List<DamageGetData>();
         //
-        public List<List<float>> UBExecTime = new List<List<float>>();
+        //public List<List<float>> UBExecTime = new List<List<float>>();
         
         public List<int[]> AllUnitUBList = new List<int[]>();
         [JsonIgnore]
@@ -918,27 +925,39 @@ namespace PCRCalculator.Tool
                 for (int i = 0; i < AllUnitUBList.Count; i++)
                 {
                     int prop = AllUnitUBList[i][2];
+                    float prop2 = prop / 10.0f;
+                    while (prop2 > 1)
+                        prop2 = prop2 / 10.0f;
                     if (prop > 0)
                     {
-                        int idx = playerGroupData.playerData.playrCharacters.FindIndex(x => x.unitId == AllUnitUBList[i][0]);
+                        int idx = playerGroupData.playerData.playrCharacters.FindIndex(x => x.unitId == PCRSettings.GetOrinUnitid( AllUnitUBList[i][0]));
                         if (idx != -1)
                         {
                             int idx2 = playerGroupData.UBExecTimeData[idx].FindIndex(x => x == AllUnitUBList[i][1]);
                             if (idx2 != -1)
                             {
-                                playerGroupData.UBExecTimeData[idx][idx2] += prop / 10.0f;
+                                playerGroupData.UBExecTimeData[idx][idx2] += prop2;
                             }
                         }
                     }
                 }
             }
         }
+        public string GetDebugText()
+        {
+            string json = "";
+            json += JsonConvert.SerializeObject(this);
+            json += JsonConvert.SerializeObject(allUnitStateChangeDic);
+            json += JsonConvert.SerializeObject(uBDetails);
+            return json;
+        }
     }
     public class UBDetail
     {
         public bool isBossUB;
-        public UnitData unitData;
+        //public UnitData unitData;
         public int UBTime;
+        public int UBTimeReal;
         public int Damage;
         public bool Critical;
         public int unitid;

@@ -24,16 +24,19 @@ namespace PCRCalculator.Hook
                 {
                     return;
                 }
-                int idx = battleManager.DJJKGCFKJNJ.FindIndex(a => a == __instance);
-                if(idx>=0&&idx<=battleManager.DJJKGCFKJNJ.Count)
+                if (!(__instance.IsOther || __instance.IsBoss))
                 {
-                    var ub = PCRBattle.Instance.GetUbTimes(idx);
-                    SetUBExecTime_new(__instance, ub.Item1, PCRBattle.Instance.saveData.ubTryCount, ub.Item2);
-                    //SetUBExecTime(__instance, ub.Item1, PCRBattle.Instance.saveData.ubTryCount,ub.Item2);
-                }
-                else
-                {
-                    Cute.ClientLog.AccumulateClientLog("错误！未找到对应角色" + _data.MasterData.UnitName);
+                    int idx = battleManager.DJJKGCFKJNJ.FindIndex(a => a == __instance);
+                    if (idx >= 0 && idx <= battleManager.DJJKGCFKJNJ.Count)
+                    {
+                        var ub = PCRBattle.Instance.GetUbTimes(idx);
+                        SetUBExecTime_new(__instance, ub.Item1, PCRBattle.Instance.saveData.ubTryCount, ub.Item2);
+                        //SetUBExecTime(__instance, ub.Item1, PCRBattle.Instance.saveData.ubTryCount,ub.Item2);
+                    }
+                    else
+                    {
+                        Cute.ClientLog.AccumulateClientLog("错误！未找到对应角色" + _data.MasterData.UnitName + "idx" + idx);
+                    }
                 }
             }
             if(__instance.IsBoss && PCRSettings.showBossDEF)
@@ -43,21 +46,21 @@ namespace PCRCalculator.Hook
                     Buffdef0.UpdateBossTP(a);        
                 };
             }
-            PCRBattle.Instance.OnUnitTPChange(__instance);
-            __instance.EnergyChange += (a) => {
+            //PCRBattle.Instance.OnUnitTPChange(__instance.UnitId,__instance.Energy,"初始化");
+            /*__instance.EnergyChange += (a) => {
                 PCRBattle.Instance.OnUnitTPChange(a);
-            };
-            PCRBattle.Instance.OnUnitHPChange(__instance.UnitId, __instance.IsOther,(int)__instance.Hp);
+            };*/
+            //PCRBattle.Instance.OnUnitHPChange(__instance.UnitId, __instance.IsOther,(int)__instance.Hp,"初始化");
             if (__instance.IsPartsBoss)
             {
                 foreach(var parts in __instance.BossPartsListForBattle)
                 {
-                    PCRBattle.Instance.OnBossDEFChange(__instance, parts.Index);
+                    PCRBattle.Instance.OnBossDEFChange(__instance, "初始化", parts.Index);
                 }
             }
             else
             {
-                PCRBattle.Instance.OnBossDEFChange(__instance, 0);
+                PCRBattle.Instance.OnBossDEFChange(__instance, "初始化", 0);
             }
         }
         public static void SetUBExecTime(UnitCtrl __instance,List<float> times, int tryCount,bool islogic = true)
@@ -97,8 +100,16 @@ namespace PCRCalculator.Hook
                 {
                     ubTime = (int)times[i];
                 }*/
-                int priority = (int)(10.0f * times[i]) - 10 * ubTime;
+                int priority = Mathf.RoundToInt(10.0f * times[i]) - 10 * ubTime;
                 UBTimeData timeData = new UBTimeData(ubTime, priority, __instance);
+                timeData.waitBOSSUB = times[i] * 10 - Mathf.RoundToInt(times[i] * 10) > 0.01f;
+                if (timeData.waitBOSSUB)
+                {
+                    UnityEngine.Debug.Log($"WAIT BOSS UB:{__instance.UnitId}-{times[i]}-{times[i] * 10}-{(int)(times[i] * 10)}");
+
+                }
+                //Cute.ClientLog.AccumulateClientLog($"ADD UB TIME:{__instance.UnitId}-{times[i]}-{ubTime}-{priority}");
+
                 times2.Add(timeData);
             }
             PCRBattle.Instance.AddUBTimes(times2,islogic);
@@ -167,11 +178,12 @@ namespace PCRCalculator.Hook
                 yield return null;
             }
         }
-        public static IEnumerator UpdateUBExecTime_new(List<UBTimeData> times,bool isreal, int tryCount)
+        public static IEnumerator UpdateUBExecTime_new(bool isreal, int tryCount,Action action)
         {
             //int realTimeCount = 0;
             yield return null;
-            if (times.Count <= 0)
+
+            if (PCRBattle.Instance.UBTimeDatas.Count <= 0)
             {
                 yield break;
             }
@@ -179,26 +191,51 @@ namespace PCRCalculator.Hook
             yield return null;
             //int lastFrame = 0;
             //int priority = 0;
-            Elements.Battle.BattleManager battleManager = Traverse.Create(times[0].unit).Field("staticBattleManager").GetValue<BattleManager>();
+            string logFull = Newtonsoft0.Json.JsonConvert.SerializeObject(PCRBattle.Instance.UBTimeDatas);
+            //Cute.ClientLog.AccumulateClientLog($"UBTimeDataList:\n{logFull}\n\n");
+            Elements.Battle.BattleManager battleManager = Traverse.Create(PCRBattle.Instance.UBTimeDatas[0].unit).Field("staticBattleManager").GetValue<BattleManager>();
 
             float startRemainTime = Traverse.Create(battleManager).Field("startRemainTime").GetValue<float>();
+            bool waitFlag = true;
             while (true)
             {
                 int currentLogicFrame = (int)((startRemainTime - battleManager.HIJKBOIEPFC)*60.0f);
                 int currentRealFrame = battleManager.JJCJONPDGIM;
                 int currentFrame = isreal ? currentRealFrame : currentLogicFrame;
-                Label0:
-                if (times.Count <= 0)
+            Label0:
+                if (PCRBattle.Instance.UBTimeDatas.Count <= 0)
+                {
+                    action?.Invoke();
                     yield break;
-                UBTimeData date = times[0];
+                }
+                if (!PCRBattle.Instance.UseUBTimeDatas)
+                {
+                    yield return null;
+                    continue;
+                }
+                UBTimeData date = PCRBattle.Instance.UBTimeDatas[0];
                 if (date.ubTime <= currentFrame)
                 {
                     if (date.execCount <= tryCount)
                     {
                         //if (isreal || date.prioruty <= priority)
                         //{
+                        if (!isreal && date.waitBOSSUB)
+                        {
+                            if (!PCRBattle.Instance.IsBossUBExecd(date.ubTime))
+                            {
+                                //UnityEngine.Debug.Log($"[{currentLogicFrame}/{currentRealFrame}]角色{date.unit.UnitId}等待BOSSUB ({date.execCount}/{tryCount})");
+                                yield return null;
+                                continue;
+                            }
+                            //Cute.ClientLog.AccumulateClientLog($"[{currentLogicFrame}/{currentRealFrame}]角色{date.unit.UnitId}等待BOSSUB ({date.execCount}/{tryCount})");
+                            date.waitBOSSUB = false;
+                        }
+
+
+
                         date.unit.IsUbExecTrying = true;
-                        Cute.ClientLog.AccumulateClientLog($"[{currentLogicFrame}/{currentRealFrame}]角色{date.unit.UnitId}尝试UB ({date.execCount}/{tryCount})");
+                        //UnityEngine.Debug.Log($"[{currentLogicFrame}/{currentRealFrame}]角色{date.unit.UnitId}尝试UB ({date.execCount}/{tryCount})");
 
                         if (battleManager.GetBlackoutUnitTargetLength() <= 0)
                         {
@@ -206,19 +243,31 @@ namespace PCRCalculator.Hook
                         }
                         else
                         {
-                            if (battleManager.GetBlackoutUnitTarget(0).UnitId == date.unit.UnitId)
+                            /*if(waitFlag)
+                            {
+                                waitFlag = false;
+                                yield return null;
+                                continue;
+                            }
+                            else
+                            {
+                                waitFlag = true;
+                            }*/
+                            /*if (battleManager.GetBlackoutUnitTarget(0).UnitId == date.unit.UnitId)
                             {
                                 Cute.ClientLog.AccumulateClientLog($"[{currentLogicFrame}/{currentRealFrame}]检测到角色{date.unit.UnitId}正在UB，跳转下一个目标");
-                                times.RemoveAt(0);
+                                PCRBattle.Instance.UBTimeDatas.RemoveAt(0);
+                                action?.Invoke();
                                 goto Label0;
-                            }
+                            }*/
                             //if (PCRBattle.Instance.IsUBExecd(date.unit.UnitId, currentFrame))
                             if (date.unit.CurrentState == UnitCtrl.ActionState.SKILL_1)
                             {
                                 //priority++;
                                 Cute.ClientLog.AccumulateClientLog($"[{currentLogicFrame}/{currentRealFrame}]检测到角色{date.unit.UnitId}处于UB状态，跳转下一个目标");
                                 date.execCount += 9999;
-                                times.RemoveAt(0);
+                                PCRBattle.Instance.UBTimeDatas.RemoveAt(0);
+                                action?.Invoke();
                                 goto Label0;
 
                             }
@@ -229,7 +278,8 @@ namespace PCRCalculator.Hook
                     else
                     {
                         Cute.ClientLog.AccumulateClientLog($"[{currentLogicFrame}/{currentRealFrame}]角色{date.unit.UnitId}UB尝试次数已满，跳转下一个目标");
-                        times.RemoveAt(0);
+                        PCRBattle.Instance.UBTimeDatas.RemoveAt(0);
+                        action?.Invoke();
                         goto Label0;
 
                     }
@@ -267,14 +317,17 @@ namespace PCRCalculator.Hook
         {
             public int ubTime;
             public int prioruty;
+            public int unitid;
+            [Newtonsoft0.Json.JsonIgnore]
             public UnitCtrl unit;
             public int execCount;
-
+            public bool waitBOSSUB;
             public UBTimeData(int ubTime, int prioruty, UnitCtrl unit)
             {
                 this.ubTime = ubTime;
                 this.prioruty = prioruty;
                 this.unit = unit;
+                this.unitid = unit.UnitId;
             }
 
         }
@@ -290,7 +343,31 @@ namespace PCRCalculator.Hook
         }
 
     }
+    [HarmonyPatch(typeof(UnitCtrl), "createHealNumEffect")]
+    public class UnitCtrlAdd0099
+    {
+        static bool Prefix(UnitCtrl __instance, int _value, BasePartsData _targetParts)
+        {            
+            return !PCRSettings.Instance.battleSetting.showUI;
+        }
 
+    }
+    [HarmonyPatch(typeof(UnitCtrl), "setStateSkill1")]
+    public class UnitCtrlAdd07
+    {
+        static bool Prefix(UnitCtrl __instance)
+        {
+            if (__instance.IsBoss)
+            {
+                BattleManager battleManager = PCRSettings.staticBattleBanager;
+                float startRemainTime = Traverse.Create(battleManager).Field("startRemainTime").GetValue<float>();
+                int exectTime = UnityEngine.Mathf.RoundToInt((startRemainTime - battleManager.HIJKBOIEPFC) * 60);
+                PCRBattle.Instance.EnemyLastUBFrame = exectTime;
+            }
+            return true;
+        }
+
+    }
     [HarmonyPatch(typeof(UnitCtrl), "EnableAbnormalState")]
     public class UnitCtrlAdd0
     {
@@ -404,22 +481,51 @@ namespace PCRCalculator.Hook
 
     }
     [HarmonyPatch(typeof(UnitCtrl), "SetDamageImpl")]
-    public class UnitCtrlAdd05
+    public class UnitCtrlAdd050
     {
-        static void Postfix(UnitCtrl __instance, ref long __result, Elements.DamageData _damageData, bool _byAttack, ActionParameter.OnDamageHitDelegate _onDamageHit, bool _hasEffect, Skill _skill, bool _energyAdd, bool _critical, Action _onDefeat, bool _noMotion, Func<int, float, int> _upperLimitFunc, float _energyChargeMultiple)
+        public static void Postfix(UnitCtrl __instance,ref long __result, Elements.DamageData _damageData,bool _critical, Skill _skill)
         {
-            BattleManager battleManager = PCRSettings.staticBattleBanager;
-            float startRemainTime = Traverse.Create(battleManager).Field("startRemainTime").GetValue<float>();
-            int exectTime = UnityEngine.Mathf.RoundToInt((startRemainTime - battleManager.HIJKBOIEPFC) * 60);
-            int skillid = _skill == null ? 0 : _skill.SkillId;
-            PlayerDamageData damageData = new PlayerDamageData(exectTime, battleManager.JJCJONPDGIM, __result, _critical, _damageData.CriticalRate, 2f * _damageData.CriticalDamageRate, skillid);
-            int sourceid = _damageData.Source == null ? 0 : _damageData.Source.UnitId;
-            /*if (__instance.IsAbnormalState(Elements.UnitCtrl.eAbnormalState.LOG_ALL_BARRIR))
+            //UnityEngine.Debug.Log($"aaa");
+            int pos = 0;
+            try
+            {
+                BattleManager battleManager = PCRSettings.staticBattleBanager;
+                float startRemainTime = Traverse.Create(battleManager).Field("startRemainTime").GetValue<float>();
+                int exectTime = UnityEngine.Mathf.RoundToInt((startRemainTime - battleManager.HIJKBOIEPFC) * 60);
+                int skillid = _skill == null ? 0 : _skill.SkillId;
+                pos = 100;
+                PlayerDamageData damageData = new PlayerDamageData(exectTime, battleManager.JJCJONPDGIM, __result, _critical, _damageData.CriticalRate, 2f * _damageData.CriticalDamageRate, skillid);
+                int sourceid = _damageData.Source == null ? 0 : _damageData.Source.UnitId;
+                pos = 200;
+                PCRBattle.Instance.OnReceiveDamage(__instance.UnitId, sourceid, damageData);
+                pos = 300;
+            }
+            catch (Exception ex)
             {
 
-            }*/
-                PCRBattle.Instance.OnReceiveDamage(__instance.UnitId, sourceid , damageData);
+                UnityEngine.Debug.Log($"[{pos}]{ex.ToString()}");
+            }
+            
+        }
 
+    }
+    //[HarmonyPatch(typeof(UnitCtrl), "SetDamage")]
+    public class UnitCtrlAdd06
+    {
+        static bool Prefix(UnitCtrl __instance, Elements.DamageData _damageData, bool _byAttack, int _actionId, ActionParameter.OnDamageHitDelegate _onDamageHit = null, bool _hasEffect = true, Skill _skill = null, bool _energyAdd = true, Action _onDefeat = null, bool _noMotion = false, float _damageWeight = 1f, float _damageWeightSum = 1f, Func<int, float, int> _upperLimitFunc = null, float _energyChargeMultiple = 1f)
+        {
+            /*if (PCRBattle.Instance.UseFakeCritical)
+            {
+                if (__instance.IsOther)
+                {
+                    BattleManagerHook.RandomState = PCRBattle.Instance.FakeCritLev_enemy;
+                }
+                else
+                {
+                    BattleManagerHook.RandomState = PCRBattle.Instance.FakeCritLev_player;
+                }
+            }*/
+            return true;
         }
 
     }

@@ -57,7 +57,11 @@ namespace PCRCalculator.Hook
                 }
             }
             Battlelog.MyLog(null, Elements.eBattleLogType.SET_BUFF_DEBUFF, (int)_kind, _value, 0L, 0, 0,( _enable?1:0), 100, _source, __instance.Owner);
-            PCRBattle.Instance.OnBossDEFChange(__instance.Owner);
+            if (__instance.Owner.IsBoss)
+            {
+                string des = $"来自{PCRBattle.Instance.GetName(_source?.UnitId ?? 0)}，值{_value}";
+                PCRBattle.Instance.OnBossDEFChange(__instance.Owner, des);
+            }
         }
         public static void UpdateBossDEF(PartsBossGauge __instance, int def, int mdef,float tp)
         {
@@ -80,7 +84,8 @@ namespace PCRCalculator.Hook
         static void Postfix(PartsData __instance, bool _enable, int _value, UnitCtrl.BuffParamKind _kind, UnitCtrl _source, MLEGMHAOCON _battleLog, bool _additional)
         {            
             Battlelog.MyLog(null, Elements.eBattleLogType.SET_BUFF_DEBUFF, (int)_kind, _value, __instance.Index, 0, 0, (_enable ? 1 : 0), 200, _source, __instance.Owner);
-            PCRBattle.Instance.OnBossDEFChange(__instance.Owner,__instance.Index);
+            string des = $"来自{PCRBattle.Instance.GetName(_source?.UnitId ?? 0)}，值{_value}";
+            PCRBattle.Instance.OnBossDEFChange(__instance.Owner,des,__instance.Index);
         }
     }
 

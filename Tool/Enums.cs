@@ -87,7 +87,7 @@ namespace PCRCalculator.Tool
         BATTLE_RECOVERY = 7,
         [Description("击杀单位")]
         KILL_BONUS = 8,
-        [Description("调用函数")]
+        [Description("充电")]
         BY_CHANGE_ENERGY = 9,
         [Description("未知")]
         INVALID_VALUE = -1

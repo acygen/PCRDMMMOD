@@ -40,7 +40,10 @@ namespace PCRCalculator.Tool
         public DataHead data_headers = new DataHead(1);
         public List<object> data = new List<object>();
     }
-
+    public class MyPageReceive
+    {
+        public List<MyPage> my_page_info = new List<MyPage>();
+    }
     public class BattleLodData
     {
         public DataHead data_headers = new DataHead(1);

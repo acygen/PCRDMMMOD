@@ -61,6 +61,7 @@ namespace PCRCalculator.UI
                 unitTimeLineGroup.UpdateHeight(basePos);
                 basePos += unitTimeLineGroup.Height;
             }*/
+            UnitTimeLineGroupImage.scaleValue = 0.7f;
             Reflash();
         }
         public void Reflash()
@@ -164,6 +165,13 @@ namespace PCRCalculator.UI
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            Reflash();
+        }
+
+        private void trackBar1_Scroll(object sender, EventArgs e)
+        {
+            int x = trackBar1.Value;
+            UnitTimeLineGroupImage.scaleValue = 0.7f + x * 0.2f +x*x*0.35f;
             Reflash();
         }
     }
@@ -460,7 +468,7 @@ namespace PCRCalculator.UI
             parent.Controls.Add(nameLabel);*/
             foreach (var data in unitStates)
             {
-                AddStateButtons(data.from, data.fromReal, data.to, data.toReal, data.type,()=> BattleStatePage.OpenStateDetailPage(data));
+                AddStateButtons(data.from, data.fromReal, data.to, data.toReal, data.type,()=> BattleStatePage.OpenStateDetailPage(data),data?.skillData?.skillID2 ?? 0);
             }
             if (showFuff)
                 foreach (var data in unitAbnormals)
@@ -491,7 +499,7 @@ namespace PCRCalculator.UI
             }
 
         }
-        public void AddStateButtons(int start, int startReal, int end, int endReal, int stateInt, System.Action action = null)
+        public void AddStateButtons(int start, int startReal, int end, int endReal, int stateInt, System.Action action = null,int skillID=0)
         {
             if (start == end && startReal == endReal)
                 return;
@@ -502,7 +510,13 @@ namespace PCRCalculator.UI
             int posx = (int)Math.Round((timeType == TimeLabelType.REAL ? startReal:start) * scaleValue + startPos);
             int scale = Math.Max(minLength, length);
             int posy = Height + basePosY;
-            buttonEX.Init(timeType, 1, stateColors[stateInt % stateColors.Length], (int)posx, posy, scale, stateNames[stateInt % stateNames.Length], start == 0, start, startReal, true, end, endReal,clickEventList,action);
+            string stateName = stateNames[stateInt % stateNames.Length];
+            if (stateInt == 3 && skillID>0)
+            {
+                int skIDX = (skillID % 10) - 1;
+                stateName += skIDX.ToString();
+            }
+            buttonEX.Init(timeType, 1, stateColors[stateInt % stateColors.Length], (int)posx, posy, scale, stateName, start == 0, start, startReal, true, end, endReal,clickEventList,action);
             stateButtons.Add(buttonEX);
         }
         public void AddAbnormalStateButtons(UnitAbnormalStateChangeData changeData, System.Action action = null,bool simple = true)

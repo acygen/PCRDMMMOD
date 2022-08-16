@@ -27,7 +27,7 @@ namespace PCRCalculator.UI
             {
                 Append("对象id:" + data.skillData.unitid);
                 Append("对象名字:" + data.skillData.UnitName,Color.Blue);
-                Append("技能id:" + data.skillID);
+                Append("技能id:" + data.skillData.skillID2);
                 Append("技能名字:" + data.skillData.skillName,Color.Blue);
                 Append("开始时间:" + data.from);
                 Append("开始时间2:" + data.fromReal);

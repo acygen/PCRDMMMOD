@@ -4,7 +4,7 @@ using System.IO;
 using System.Windows.Forms;
 using Cute;
 using Elements;
-using PluginLoader;
+//using PluginLoader;
 using UnityEngine;
 using System.Collections;
 using LitJson;
@@ -46,6 +46,8 @@ namespace PCRCalculator.Tool
 				yield return 0;
 			}
 			isConnectRef(_this) = true;
+			yield return null;
+			yield return null;
 			string resultText = FakeNetwork(lastRequestTask.IKALIPAFPEC, lastRequestTask.CreateBodyJson);
 			if (resultText.Contains("ERROR"))
 			{
@@ -57,7 +59,7 @@ namespace PCRCalculator.Tool
 				{
 					lastRequestTask.GHNFMJOMHNN(LDDELEOONIB.GGEABGPENAL.TimeOut);
 				}
-				ClientLog.AccumulateClientLog("UNSET URL TYPE ERROR: url-" + lastRequestTask.IKALIPAFPEC + " Not set yet!");
+				UnityEngine.Debug.Log("UNSET URL TYPE ERROR: url-" + lastRequestTask.IKALIPAFPEC + " Not set yet!");
 			}
 			else
 			{
@@ -69,8 +71,8 @@ namespace PCRCalculator.Tool
 				}
 				catch (Exception ex)
 				{
-					ClientLog.AccumulateClientLog("Error when trans received text to json:" + ex.Message);
-					ClientLog.AccumulateClientLog("received text:" + text);
+					UnityEngine.Debug.Log("Error when trans received text to json:" + ex.Message);
+					UnityEngine.Debug.Log("received text:" + text);
 
 				}
 			}
@@ -88,7 +90,7 @@ namespace PCRCalculator.Tool
     {		
 		static void Postfix(ref string __result, LFEKLJKFNPE JJOBDIMBAIC)
         {
-			ClientLog.AccumulateClientLog("原始下载地址->" + __result);
+			Cute.ClientLog.AccumulateClientLog("原始下载地址->" + __result);
 			if (!PCRSettings.replaceManifestURL)
 				return;
 			string[] urls = __result.Split('/');
@@ -106,7 +108,7 @@ namespace PCRCalculator.Tool
 					PCRTool.DownloadFile(__result, path);
                 }
             }
-			ClientLog.AccumulateClientLog(flag?("重定向->" + __result):"重定向失败！");
+			Cute.ClientLog.AccumulateClientLog(flag?("重定向->" + __result):"重定向失败！");
 			
 		}
 	}
@@ -120,42 +122,42 @@ namespace PCRCalculator.Tool
 			{
 				;
 			}, true, true, false);
-			ClientLog.AccumulateClientLog(errorName);
+			Cute.ClientLog.AccumulateClientLog(errorName);
 			return false;
 		}
 
 	}
-	[HarmonyPatch(typeof(HomeTask), "ParseHomeIndexPartial")]
+	//[HarmonyPatch(typeof(HomeTask), "ParseHomeIndexPartial")]
 	public class HomeTaskErrorHook
 	{
 		static bool Prefix(HomeTask __instance,  int _resultCode, JsonData _header, JsonData _data)
 		{
 			try
 			{
-				ClientLog.AccumulateClientLog("HOME-0");
+				//ClientLog.AccumulateClientLog("HOME-0");
 				HomeIndexReceiveParam homeIndexReceiveParam = new HomeIndexReceiveParam(_data);
 				Hook.Hook.CallVoidMethod(typeof(HomeTask), __instance, "parseBaseReceiveParam", new object[] { homeIndexReceiveParam });
-				ClientLog.AccumulateClientLog("HOME-1000");
+				//ClientLog.AccumulateClientLog("HOME-1000");
 				Hook.Hook.CallVoidMethod(typeof(HomeTask), __instance, "ParseHomeIndexImpl", new object[] { _resultCode, _header, homeIndexReceiveParam });
 				//ParseHomeIndexImpl(__instance, _resultCode, _header, homeIndexReceiveParam);
-				ClientLog.AccumulateClientLog("HOME-2000");
-				var userData = Singleton<UserData>.Instance;
-				var PresentCount = userData.PresentInfo.PresentCount;
-				ClientLog.AccumulateClientLog($"HOME-2010-{PresentCount}");
+				//ClientLog.AccumulateClientLog("HOME-2000");
+				//var userData = Singleton<UserData>.Instance;
+				//var PresentCount = userData.PresentInfo.PresentCount;
+				//ClientLog.AccumulateClientLog($"HOME-2010-{PresentCount}");
 
-				var MissionCount = userData.UsualMissionData.EnableReceiveMissionCount;
-				ClientLog.AccumulateClientLog($"HOME-2020-{MissionCount}");
-				var clanBattleRemainingCount = homeIndexReceiveParam.ClanBattleRemainingCount;
-				ClientLog.AccumulateClientLog($"HOME-2040-{clanBattleRemainingCount}");
+				//var MissionCount = userData.UsualMissionData.EnableReceiveMissionCount;
+				//ClientLog.AccumulateClientLog($"HOME-2020-{MissionCount}");
+				//var clanBattleRemainingCount = homeIndexReceiveParam.ClanBattleRemainingCount;
+				//ClientLog.AccumulateClientLog($"HOME-2040-{clanBattleRemainingCount}");
 
-				ClientLog.AccumulateClientLog($"HOME-2050-{homeIndexReceiveParam==null}");
+				//ClientLog.AccumulateClientLog($"HOME-2050-{homeIndexReceiveParam==null}");
 				
 				ManagerSingleton<ApiManager>.Instance.PartialCallbackHomeIndexReceiveParam.Call(homeIndexReceiveParam);
 				ClientLog.AccumulateClientLog("HOME-3000");
 			}
             catch(Exception ex)
             {
-				ClientLog.AccumulateClientLog($"[ERROR]:{ex.Message}\n{ex.StackTrace}");
+				ClientLog.AccumulateClientLog($"[ERROR]?:{ex.Message}\n{ex.StackTrace}");
 
 			}
 			return false;
@@ -349,14 +351,25 @@ namespace PCRCalculator.Tool
 			ClientLog.AccumulateClientLog(Encoding.UTF8.GetString(__result));
 		}
     }
-	[HarmonyPatch(typeof(ViewHome), "setHomeContentsButtonState")]
+	//[HarmonyPatch(typeof(ViewHome), "setHomeContentsButtonState")]
 	public class HomeUtility0
 	{
 		static void Postfix(ViewHome __instance)
 		{
 			ClientLog.AccumulateClientLog("HOME-2900");
-			var banner = Traverse.Create(__instance).Field("partsBanner").GetValue<PartsBanner>();
-			ClientLog.AccumulateClientLog($"HOME-2999{banner==null}");
+			var banner = Traverse.Create(__instance).Field("taqTemp").GetValue<EHPLBCOOOPK.PCGMJIFHDCJ>();
+			ClientLog.AccumulateClientLog($"HOME-2950{banner==null}");
+			var dd =Traverse.Create(__instance).Field("userData").GetValue<UserData>();
+			ClientLog.AccumulateClientLog($"HOME-2960{dd == null}");
+
+		}
+	}
+	//[HarmonyPatch(typeof(PartsBanner), "Init")]
+	public class HomeUtility00
+	{
+		static void Postfix(PartsBanner __instance, bool _isShowRoom = false, bool _isShowGachaTop = false, bool _isShowSpfesGachaTop = false)
+		{
+			ClientLog.AccumulateClientLog("HOME-2980");
 		}
 	}
 }

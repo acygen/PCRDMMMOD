@@ -22,6 +22,7 @@ namespace PCRCalculator.Tool
             {
                 instance = new PCRTool();
                 instance.InitTool();
+                //ShowPCRUI.LoadUI();
             }
         }
         public SetBox.ManagerForm managerForm;
@@ -191,8 +192,10 @@ namespace PCRCalculator.Tool
             }
             else if (URL.Contains("my_page/set_my_page"))
             {
+                PCRSettings.Instance.OnSetMyPage(uploadJson);
                 var deck = new MyPageSet();
                 result = JsonConvert.SerializeObject(deck);
+
             }
             else if (URL.Contains("unit/automatic_enhance"))
             {
@@ -212,6 +215,7 @@ namespace PCRCalculator.Tool
             {
                 if (PCRSettings.Instance.forceLogBattleStart)
                 {
+                    ClientLog.AccumulateClientLog(URL);
                     ClientLog.AccumulateClientLog(uploadJson);
                     ClientLog.AccumulateClientLog(result);
                 }

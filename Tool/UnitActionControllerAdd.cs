@@ -25,6 +25,7 @@ namespace PCRCalculator.Hook
                 pos = 10;
                 Skill skill = skillDictionary[skillId];
                 skillExecData.skillID = skillId;
+                skillExecData.skillID2 = skill.SkillId;
                 skillExecData.skillName = skill.SkillName;
                 pos = 30;
                 skillExecData.skillState = __result ? UnitSkillExecData.SkillState.NORMAL : UnitSkillExecData.SkillState.CANCEL;

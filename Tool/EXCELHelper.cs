@@ -109,10 +109,9 @@ namespace PCRCalculator.Tool
                             try
                             {
                                 jsonStr = VEDGVVNOVN(dataStr);
-                                var guildTimelineData = JsonConvert.DeserializeObject<GuildTimelineData>(jsonStr);
+                                lineData = JsonConvert.DeserializeObject<GuildTimelineData>(jsonStr);
 
-                                guildTimelineData.timeLineName = name;
-                                return guildTimelineData;
+                                lineData.timeLineName = name;
                             }
                             catch (System.Exception e)
                             {
@@ -128,6 +127,77 @@ namespace PCRCalculator.Tool
                     else
                     {
                         Message.Add("未找到savePage页！");
+                    }
+
+                    int debugPos = 0;
+                    try
+                    {
+
+                        Dictionary<string, int> unitIdDic = new Dictionary<string, int>();
+                        DataTable dataTable3 = result.Tables["基础数据"];
+                        if (dataTable3 != null)
+                        {
+                            for (int i0 = 0; i0 < 5; i0++)
+                                unitIdDic.Add(dataTable3.Rows[2+i0][1].ToString(), int.Parse(dataTable3.Rows[2+i0][0].ToString()));
+                            debugPos = 20;
+                        }
+
+                        DataTable dataTable2 = result.Tables["轴模板"];
+                        if (dataTable2 != null && lineData != null)
+                        {
+                            int lastFrame = 0;
+                            int lastUnitid = 0;
+                            int lastPropoty = 1;
+                            int totalFixed = 0;
+                            debugPos = 100;
+                            for (int i1 = 9; i1 < dataTable2.Rows.Count; i1++)
+                            {
+                                debugPos = 1000 + i1 * 10;
+                                if (int.TryParse(dataTable2.Rows[i1][0].ToString(), out int frame))
+                                {
+                                    if (!dataTable2.Rows[i1][1].ToString().Contains("BOSS"))
+                                    {
+                                        string unitName = dataTable2.Rows[i1][2].ToString();
+                                        int unitid = unitIdDic[unitName];
+                                        debugPos++;
+                                        if (frame == lastFrame)
+                                        {
+                                            if (lastPropoty == 1)
+                                            {
+                                                int[] lastResult = lineData.AllUnitUBList.Find(a => a[0] == lastUnitid && a[1] == lastFrame);
+                                                if (lastResult != null && lastResult[2] != lastPropoty)
+                                                {
+                                                    lastResult[2] = lastPropoty;
+                                                    totalFixed++;
+                                                }
+                                            }
+                                            lastPropoty++;
+                                            int[] nowResult = lineData.AllUnitUBList.Find(a => a[0] == unitid && a[1] == frame);
+                                            debugPos++;
+                                            if (nowResult != null && nowResult[2] != lastPropoty)
+                                            {
+                                                nowResult[2] = lastPropoty;
+                                                totalFixed++;
+                                            }
+
+                                        }
+                                        else
+                                        {
+                                            lastPropoty = 1;
+                                        }
+                                        lastFrame = frame;
+                                        lastUnitid = unitid;
+
+                                    }
+                                }
+                            }
+                            Message.Add($"修复{totalFixed}处错误！");
+
+                        }
+                    }
+                    catch (Exception epc)
+                    {
+                        Message.Add($"未校验！{debugPos}-{epc.Message}");
                     }
                 }
                 else
@@ -277,7 +347,6 @@ namespace PCRCalculator.Tool
                     int currentLineNum = 10;
                     debugPos = 300;
                     List<UBDetail> UBList = TimelineData.uBDetails;
-                    UBList.Sort((a, b) => a.UBTime - b.UBTime);
                     foreach (var a in UBList)
                     {
                         worksheet0.MySetValue(currentLineNum, 1, a.UBTime);
@@ -424,7 +493,7 @@ namespace PCRCalculator.Tool
                     lineNum++;
                     bool flag = true;
                     int count0 = 0;
-                    List<List<float>> UBexecTimeList = TimelineData.UBExecTime;
+                    List<List<float>> UBexecTimeList = TimelineData.playerGroupData.UBExecTimeData;
                     while (flag)
                     {
                         flag = false;
@@ -432,7 +501,9 @@ namespace PCRCalculator.Tool
                         {
                             if (UBexecTimeList[i] != null && count0 < UBexecTimeList[i].Count)
                             {
-                                worksheet1.Cells[lineNum, 1 + i].Value = (90.0f - UBexecTimeList[i][count0] / 60.0f);
+                                //worksheet1.Cells[lineNum, 1 + i].Value = (90.0f - UBexecTimeList[i][count0] / 60.0f);
+                                worksheet1.Cells[lineNum, 1 + i].Value = UBexecTimeList[i][count0];
+
                                 flag = true;
                             }
                         }
@@ -447,7 +518,7 @@ namespace PCRCalculator.Tool
                     worksheet2.Cells[lineNum, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                     worksheet2.Cells[lineNum, 1].Value = "角色技能循环";
                     lineNum++;
-                    foreach (var unit in TimelineData.allUnitStateChangeDic)
+                    foreach (var unit in TimelineData.allUnitStateInputDic)
                     {
                         lineNum++;
                         worksheet2.Cells[lineNum - 1, 1, lineNum + 1, 2].Merge = true;
@@ -467,19 +538,19 @@ namespace PCRCalculator.Tool
                         foreach (var exec in unit.Value)
                         {
                             //int length = Mathf.RoundToInt((exec.currentFrameCount - lastFrameCount) / 60.0f);
-                            int endLoc = Mathf.RoundToInt(exec.currentFrameCount / 30.0f) + 3;
+                            int endLoc = Mathf.RoundToInt(exec.to / 30.0f) + 3;
                             int length = endLoc - currentLoc;
-                            if (length < 1 && exec.changStateFrom == Elements.UnitCtrl.ActionState.SKILL_1)
+                            if (length < 1 && exec.type == (int)Elements.UnitCtrl.ActionState.SKILL_1)
                             {
                                 worksheet2.Cells[lineNum - 1, currentLoc].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                                 worksheet2.Cells[lineNum - 1, currentLoc].Style.Fill.PatternType = ExcelFillStyle.DarkGray;
-                                worksheet2.Cells[lineNum - 1, currentLoc].Style.Fill.BackgroundColor.SetColor(stateColors[(int)exec.changStateFrom]);
-                                worksheet2.Cells[lineNum - 1, currentLoc].Value = exec.changStateFrom.GetDescription();
-                                lastFrameCount = exec.currentFrameCount;
+                                worksheet2.Cells[lineNum - 1, currentLoc].Style.Fill.BackgroundColor.SetColor(stateColors[(int)exec.type]);
+                                worksheet2.Cells[lineNum - 1, currentLoc].Value = "UB";
+                                lastFrameCount = exec.to;
                             }
                             else
                             {
-                                if (length < 1 && exec.currentFrameCount != lastFrameCount)
+                                if (length < 1 && exec.to != lastFrameCount)
                                 {
                                     length = 1;
                                 }
@@ -488,11 +559,20 @@ namespace PCRCalculator.Tool
                                     worksheet2.Cells[lineNum, currentLoc, lineNum, currentLoc + length].Merge = true;
                                     worksheet2.Cells[lineNum, currentLoc].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                                     worksheet2.Cells[lineNum, currentLoc].Style.Fill.PatternType = ExcelFillStyle.DarkGray;
-                                    worksheet2.Cells[lineNum, currentLoc].Style.Fill.BackgroundColor.SetColor(stateColors[(int)exec.changStateFrom]);
-                                    worksheet2.Cells[lineNum, currentLoc].Value = exec.changStateFrom.GetDescription();
+                                    worksheet2.Cells[lineNum, currentLoc].Style.Fill.BackgroundColor.SetColor(stateColors[(int)exec.type]);
+
+                                    string value = ((Elements.UnitCtrl.ActionState)exec.type).GetDescription();
+                                    if (exec.type == (int)Elements.UnitCtrl.ActionState.SKILL )
+                                    {
+                                        int skIDX = ((exec.skillData?.skillID2 ?? 1) % 10) - 1;
+                                        value += skIDX.ToString();
+
+                                    }
+
+                                    worksheet2.Cells[lineNum, currentLoc].Value = value;
                                     worksheet2.Cells[lineNum + 1, currentLoc].Value = lastFrameCount;
                                     worksheet2.Cells[lineNum + 1, currentLoc].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
-                                    lastFrameCount = exec.currentFrameCount;
+                                    lastFrameCount = exec.to;
                                     currentLoc += length + 1;
                                 }
                             }
@@ -656,6 +736,14 @@ namespace PCRCalculator.Tool
                     worksheet4.Cells[lineNum, 1].Style.Font.Size = 12;
                     worksheet4.Cells[lineNum, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                     worksheet4.Cells[lineNum, 1].Value = hideData;
+                    /*
+                    lineNum++;
+                    worksheet4.Cells[lineNum, 1, lineNum+25, 20].Merge = true;
+                    worksheet4.Cells[lineNum, 1].Style.Font.Size = 12;
+                    worksheet4.Cells[lineNum, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet4.Cells[lineNum, 1].Value = TimeLineDataStr;
+                    */
+
                     debugPos = 9000;
                     /*ExcelWorksheet worksheet5 = package.Workbook.Worksheets.Add("随机判定");
                     lineNum = 1;
@@ -743,19 +831,27 @@ namespace PCRCalculator.Tool
         }
         private static void AddStringWithJudge(ExcelWorksheet worksheet, int x, int y, string describe)
         {
-            Regex regex = new Regex(@"<[^>]*>", RegexOptions.IgnoreCase);
-            if (describe != null)
+            try
             {
-                worksheet.Cells[x, y].Value = regex.Replace(describe, "");
-                if (describe.Contains("暴击"))
+                Regex regex = new Regex(@"<[^>]*>", RegexOptions.IgnoreCase);
+                if (!string.IsNullOrEmpty(describe))
                 {
-                    worksheet.Cells[x, y].Style.Font.Color.SetColor(System.Drawing.Color.FromArgb(199, 203, 0));
-                }
-                if (describe.Contains("MISS"))
-                {
-                    worksheet.Cells[x, y].Style.Font.Color.SetColor(System.Drawing.Color.FromArgb(255, 0, 0));
-                }
+                    worksheet.Cells[x, y].Value = regex.Replace(describe, "");
+                    if (describe.Contains("暴击"))
+                    {
+                        worksheet.Cells[x, y].Style.Font.Color.SetColor(System.Drawing.Color.FromArgb(199, 203, 0));
+                    }
+                    if (describe.Contains("MISS"))
+                    {
+                        worksheet.Cells[x, y].Style.Font.Color.SetColor(System.Drawing.Color.FromArgb(255, 0, 0));
+                    }
 
+                }
+            }
+            catch(Exception ex)
+            {
+                worksheet.Cells[x, y].Value = $"ERROR at {describe}({ex.Message})";
+                worksheet.Cells[x, y].Style.Font.Color.SetColor(System.Drawing.Color.Red);
             }
 
         }

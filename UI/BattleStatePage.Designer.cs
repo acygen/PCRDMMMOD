@@ -37,8 +37,10 @@ namespace PCRCalculator.UI
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.SimpleBuff = new System.Windows.Forms.CheckBox();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.SuspendLayout();
             // 
             // timeType3
@@ -141,11 +143,20 @@ namespace PCRCalculator.UI
             this.comboBox1.TabIndex = 12;
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
+            // trackBar1
+            // 
+            this.trackBar1.Location = new System.Drawing.Point(791, 9);
+            this.trackBar1.Name = "trackBar1";
+            this.trackBar1.Size = new System.Drawing.Size(217, 56);
+            this.trackBar1.TabIndex = 13;
+            this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
+            // 
             // BattleStatePage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1185, 642);
+            this.Controls.Add(this.trackBar1);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.SimpleBuff);
             this.Controls.Add(this.panel1);
@@ -159,6 +170,7 @@ namespace PCRCalculator.UI
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -174,5 +186,6 @@ namespace PCRCalculator.UI
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.CheckBox SimpleBuff;
         private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.TrackBar trackBar1;
     }
 }

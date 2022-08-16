@@ -13,18 +13,19 @@ using PCRCalculator.Tool;
 using CodeStage.AntiCheat.ObscuredTypes;
 using System.Reflection;
 using Coneshell;
+using Cute;
 
 namespace PCRCalculator.Hook
 {
     public class Hook
     {
-        public static void CallVoidMethod(Type type,object instance, string methodstr, object[] parammter)
+        public static void CallVoidMethod(Type type, object instance, string methodstr, object[] parammter)
         {
             var method = type.GetMethod(methodstr, BindingFlags.Instance | BindingFlags.NonPublic);
             //私有方法传参调用
             method.Invoke(instance, parammter);
         }
-        public static T CallstaticMethod<T>(Type staticType,string methodstr,object[] parammter)
+        public static T CallstaticMethod<T>(Type staticType, string methodstr, object[] parammter)
         {
             var method = staticType.GetMethod(methodstr, BindingFlags.Static | BindingFlags.NonPublic);
             object result = method.Invoke(null, parammter);
@@ -37,7 +38,7 @@ namespace PCRCalculator.Hook
     {
         static bool Prefix(ref string __result)
         {
-            if(PCRSettings.DVGGWVBMH)
+            if (PCRSettings.DVGGWVBMH)
             {
                 __result = UnityEngine.Application.streamingAssetsPath + "/Data";
                 return false;
@@ -62,7 +63,7 @@ namespace PCRCalculator.Hook
     [HarmonyPatch(typeof(Cute.ClientLog), "encryptLog")]
     class Decy
     {
-        static bool Prefix(ref string __result,string KDLBCCGHJBN)
+        static bool Prefix(ref string __result, string KDLBCCGHJBN)
         {
             __result = KDLBCCGHJBN;
             return false;
@@ -142,10 +143,10 @@ namespace PCRCalculator.Hook
             yield break;
         }
     }
-    //[HarmonyPatch(typeof(Cute.AssetManager), "PrepareManifestList")]
+    [HarmonyPatch(typeof(Cute.AssetManager), "PrepareManifestList")]
     class main1
     {
-        static bool Prefix(Cute.AssetManager __instance, out List<string> OJIGJPJBCIK, out List<string> BEFPMFMIJAJ, bool MHGAAPHOMIG)
+        /*static bool Prefix(Cute.AssetManager __instance, out List<string> OJIGJPJBCIK, out List<string> BEFPMFMIJAJ, bool MHGAAPHOMIG)
         {
             OJIGJPJBCIK = new List<string>();
             BEFPMFMIJAJ = new List<string>();
@@ -160,20 +161,37 @@ namespace PCRCalculator.Hook
             BEFPMFMIJAJ.Add("manifest/soundmanifest");
             BEFPMFMIJAJ.Add("manifest/movie2manifest");
             return !PCRSettings.ignoreManifestCheck;
+        }*/
+        static void Postfix(Cute.AssetManager __instance, List<string> OJIGJPJBCIK, List<string> BEFPMFMIJAJ, bool MHGAAPHOMIG)
+        {
+            if (OJIGJPJBCIK != null)
+            {
+                foreach (string str in OJIGJPJBCIK)
+                {
+                    ClientLog.AccumulateClientLog($"PrepareManifest {str}");
+                }
+            }
+            if (BEFPMFMIJAJ != null)
+            {
+                foreach (string str in OJIGJPJBCIK)
+                {
+                    ClientLog.AccumulateClientLog($"PrepareManifest2 {str}");
+                }
+            }
         }
 
     }
     //[HarmonyPatch(typeof(Cute.AssetManager), "DownloadAndLoadManifestOfManifest")]
     class main10
     {
-        static bool Prefix(Cute.AssetManager __instance,ref IEnumerator __result, bool MHGAAPHOMIG)
+        static bool Prefix(Cute.AssetManager __instance, ref IEnumerator __result, bool MHGAAPHOMIG)
         {
             if (!PCRSettings.ignoreManifestCheck)
             {
                 return true;
             }
-            __result = DownloadAndLoadManifestOfManifest(__instance,  MHGAAPHOMIG);
-            return false;   
+            __result = DownloadAndLoadManifestOfManifest(__instance, MHGAAPHOMIG);
+            return false;
         }
         static IEnumerator DownloadAndLoadManifestOfManifest(Cute.AssetManager __instance, bool MHGAAPHOMIG)
         {
@@ -202,12 +220,12 @@ namespace PCRCalculator.Hook
             {
                 return true;
             }
-            __result = DownloadAndLoadManifests(__instance,  MHGAAPHOMIG);
+            __result = DownloadAndLoadManifests(__instance, MHGAAPHOMIG);
             return false;
         }
         static IEnumerator DownloadAndLoadManifests(Cute.AssetManager __instance, bool MHGAAPHOMIG)
         {
-            
+
             List<string> OJIGJPJBCIK = null;
             List<string> loadList = null;
             //PrepareManifestList(out OJIGJPJBCIK, out loadList, MHGAAPHOMIG);
@@ -223,7 +241,7 @@ namespace PCRCalculator.Hook
                     var pp = Traverse.Create(__instance).Method("GetManifestAssetType", new object[] { NKICMENDFFA }).GetValue<Cute.LFEKLJKFNPE.OHMMHCICKCF>();
                     object[] para = new object[] { __instance.LoadFileToString(NKICMENDFFA), pp };
                     Hook.CallVoidMethod(typeof(Cute.AssetManager), __instance, "LoadManifest", para);
-                    //LoadManifest(LoadFileToString(NKICMENDFFA), GetManifestAssetType(NKICMENDFFA));
+            //LoadManifest(LoadFileToString(NKICMENDFFA), GetManifestAssetType(NKICMENDFFA));
                 });
             }
             catch (Exception ex)
@@ -236,6 +254,33 @@ namespace PCRCalculator.Hook
         }
 
     }
+    [HarmonyPatch(typeof(Cute.AssetManager), "LoadManifest")]
+    class main12
+    {
+        static bool Prefix(Cute.AssetManager __instance, string IPMEMPDNLNM, Cute.LFEKLJKFNPE.OHMMHCICKCF LILCMDCAFLM)
+        {
+            try
+            {
+                int filepathColumn = 0;
+                int hashColumn = 1;
+                int downloadCategoryColumn = 2;
+                int sizeColumn = 3;
+                Cute.FMDCHHJPHIN.IterateCSV(IPMEMPDNLNM, delegate (ArrayList LNNHPLNDHHH)
+                {
+                    string text = (string)LNNHPLNDHHH[filepathColumn];
+                    LFEKLJKFNPE jJOBDIMBAIC = new LFEKLJKFNPE(text, (string)LNNHPLNDHHH[hashColumn], (string)LNNHPLNDHHH[downloadCategoryColumn], (string)LNNHPLNDHHH[sizeColumn], LILCMDCAFLM);
+                    Hook.CallVoidMethod(typeof(AssetManager), __instance, "RegistHandle", new object[] { text, jJOBDIMBAIC });
+            //RegistHandle(text, jJOBDIMBAIC);
+                }, FGPPOMPOAMD: false);
+            }
+            catch (Exception ex)
+            {
+                ClientLog.AccumulateClientLog($"ERROR at {IPMEMPDNLNM}:{ex.Message}\n{ex.StackTrace}");
+            }
+            return false;
+        }
+
+    }
 
     [HarmonyPatch(typeof(UnitUtility), "settingUnitUniqueEquipEnhanceStatus")]
     class unique
@@ -244,7 +289,7 @@ namespace PCRCalculator.Hook
         {
             __result = new UniqueNoticeEquipStatus();
 
-                return false;
+            return false;
 
         }
     }
@@ -262,7 +307,7 @@ namespace PCRCalculator.Hook
         static bool Prefix(ref ClanBattleDefine.eClanAuraEffectType __result, int _battleId, int _lapNum)
         {
             __result = ClanBattleDefine.eClanAuraEffectType.NORMAL;
-            Cute.ClientLog.AccumulateClientLog("_battleid:"+_battleId + "  _lapNum:" + _lapNum);
+            Cute.ClientLog.AccumulateClientLog("_battleid:" + _battleId + "  _lapNum:" + _lapNum);
 
             return true;
         }
@@ -284,14 +329,14 @@ namespace PCRCalculator.Hook
                 {
                     num = instance.masterUnitPromotionStatus.Get(_unitId, _rank).GetFloatValue(_paramType);
                 }
-                float growthParam = Traverse.Create(typeof(UnitUtility)).Method("getGrowthParam",new object[] { _paramType, _unitId, _rarity }).GetValue<float>();
+                float growthParam = Traverse.Create(typeof(UnitUtility)).Method("getGrowthParam", new object[] { _paramType, _unitId, _rarity }).GetValue<float>();
                 //float growthParam = getGrowthParam(_paramType, _unitId, _rarity);
                 float initialParam = Traverse.Create(typeof(UnitUtility)).Method("getInitialParam", new object[] { _paramType, _unitId, _rarity }).GetValue<float>();
                 //float initialParam = getInitialParam(_paramType, _unitId, _rarity);
                 float num2 = 0f;
-                bool flag = Traverse.Create(typeof(UnitUtility)).Method("isRankUpBonusParameter", new object[] { _paramType}).GetValue<bool>();
+                bool flag = Traverse.Create(typeof(UnitUtility)).Method("isRankUpBonusParameter", new object[] { _paramType }).GetValue<bool>();
                 //if (isRankUpBonusParameter(_paramType))
-                if(flag)
+                if (flag)
                 {
                     num2 = growthParam * (float)_rank;
                 }
@@ -301,20 +346,20 @@ namespace PCRCalculator.Hook
                 __result = Traverse.Create(typeof(UnitUtility)).Method("round", new object[] { (float)_level * growthParam + initialParam + num + num2 + promotionBonus }).GetValue<int>();
                 //__result = round((float)_level * growthParam + initialParam + num + num2 + promotionBonus);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                Cute.ClientLog.AccumulateClientLog("计算角色：" +_unitId +"等级" + _level + "星" + _rarity + "RANK" + _rank + "的属性" + _paramType.GetDescription() + "时出错！");
+                Cute.ClientLog.AccumulateClientLog("计算角色：" + _unitId + "等级" + _level + "星" + _rarity + "RANK" + _rank + "的属性" + _paramType.GetDescription() + "时出错！");
                 __result = 0;
             }
             return false;
         }
     }
-    
+
     [HarmonyPatch(typeof(DKFNICOAOBC), "OpenCustomVFS")]
     public class db
     {
         public static DKFNICOAOBC Instance;
-        static bool Prefix(DKFNICOAOBC __instance,ref bool __result, string KCCLLCOPPHF, byte[] AIAPAJCMNHD)
+        static bool Prefix(DKFNICOAOBC __instance, ref bool __result, string KCCLLCOPPHF, byte[] AIAPAJCMNHD)
         {
             Instance = __instance;
             __result = false;
@@ -335,7 +380,7 @@ namespace PCRCalculator.Hook
 
             return true;
         }
-        public static bool ExecDB(string value,bool isPath)
+        public static bool ExecDB(string value, bool isPath)
         {
             if (Instance == null)
                 return false;
@@ -368,7 +413,7 @@ namespace PCRCalculator.Hook
                     Instance.Exec(str);
                     Instance.Commit();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Instance.Rollback();
                     Instance.CloseDB();
@@ -387,122 +432,122 @@ namespace PCRCalculator.Hook
             }
         }
     }
-   
+
     #region
     /*[HarmonyPatch(typeof(UnityEngine.PlayerPrefs), "DeleteKey")]
     class playerPrefab0
     {
-        static bool Prefix(string key)
-        {
-            FakePlayerPrefab.DeleteKey(key);
-            return false;
-        }
+    static bool Prefix(string key)
+    {
+        FakePlayerPrefab.DeleteKey(key);
+        return false;
+    }
 
     }
     [HarmonyPatch(typeof(UnityEngine.PlayerPrefs), "GetFloat", new Type[] { typeof(string), typeof(float) })]
     class playerPrefab1
     {
-        static bool Prefix(ref float __result, string key, float value)
-        {
-            __result = FakePlayerPrefab.GetFloat(key, value);
-            return false;
-        }
+    static bool Prefix(ref float __result, string key, float value)
+    {
+        __result = FakePlayerPrefab.GetFloat(key, value);
+        return false;
+    }
     }
     [HarmonyPatch(typeof(UnityEngine.PlayerPrefs), "GetFloat", new Type[] { typeof(string) })]
     class playerPrefab2
     {
-        static bool Prefix(ref float __result, string key)
-        {
-            __result = FakePlayerPrefab.GetFloat(key);
-            return false;
-        }
+    static bool Prefix(ref float __result, string key)
+    {
+        __result = FakePlayerPrefab.GetFloat(key);
+        return false;
+    }
     }
     [HarmonyPatch(typeof(UnityEngine.PlayerPrefs), "GetInt", new Type[] { typeof(string), typeof(int) })]
     class playerPrefab3
     {
-        static bool Prefix(ref int __result, string key, int value)
-        {
-            __result = FakePlayerPrefab.GetInt(key, value);
-            return false;
-        }
+    static bool Prefix(ref int __result, string key, int value)
+    {
+        __result = FakePlayerPrefab.GetInt(key, value);
+        return false;
+    }
     }
     [HarmonyPatch(typeof(UnityEngine.PlayerPrefs), "GetInt", new Type[] { typeof(string) })]
     class playerPrefab4
     {
-        static bool Prefix(ref int __result, string key)
-        {
-            __result = FakePlayerPrefab.GetInt(key);
-            return false;
-        }
+    static bool Prefix(ref int __result, string key)
+    {
+        __result = FakePlayerPrefab.GetInt(key);
+        return false;
+    }
     }
     [HarmonyPatch(typeof(UnityEngine.PlayerPrefs), "GetString", new Type[] { typeof(string), typeof(string) })]
     class playerPrefab5
     {
-        static bool Prefix(ref string __result, string key, string value)
-        {
-            __result = FakePlayerPrefab.GetString(key, value);
-            return false;
-        }
+    static bool Prefix(ref string __result, string key, string value)
+    {
+        __result = FakePlayerPrefab.GetString(key, value);
+        return false;
+    }
     }
     [HarmonyPatch(typeof(UnityEngine.PlayerPrefs), "GetString", new Type[] { typeof(string)})]
     class playerPrefab6
     {
-        static bool Prefix(ref string __result, string key)
-        {
-            __result = FakePlayerPrefab.GetString(key);
-            return false;
-        }
+    static bool Prefix(ref string __result, string key)
+    {
+        __result = FakePlayerPrefab.GetString(key);
+        return false;
+    }
     }
     [HarmonyPatch(typeof(UnityEngine.PlayerPrefs), "HasKey")]
     class playerPrefab7
     {
-        static bool Prefix(ref bool __result, string key)
-        {
-            __result = FakePlayerPrefab.HasKey(key);
-            return false;
-        }
+    static bool Prefix(ref bool __result, string key)
+    {
+        __result = FakePlayerPrefab.HasKey(key);
+        return false;
+    }
     }
     [HarmonyPatch(typeof(UnityEngine.PlayerPrefs), "Save")]
     class playerPrefab8
     {
-        static bool Prefix()
-        {
-            FakePlayerPrefab.Save();
-            return false;
-        }
+    static bool Prefix()
+    {
+        FakePlayerPrefab.Save();
+        return false;
+    }
     }
     [HarmonyPatch(typeof(UnityEngine.PlayerPrefs), "SetFloat")]
     class playerPrefab9
     {
-        static bool Prefix(string key,float value)
-        {
-            FakePlayerPrefab.SetFloat(key, value);
-            return false;
-        }
+    static bool Prefix(string key,float value)
+    {
+        FakePlayerPrefab.SetFloat(key, value);
+        return false;
+    }
     }
     [HarmonyPatch(typeof(UnityEngine.PlayerPrefs), "SetInt")]
     class playerPrefab10
     {
-        static bool Prefix(string key, int value)
-        {
-            FakePlayerPrefab.SetInt(key, value);
-            return false;
-        }
+    static bool Prefix(string key, int value)
+    {
+        FakePlayerPrefab.SetInt(key, value);
+        return false;
+    }
     }
     [HarmonyPatch(typeof(UnityEngine.PlayerPrefs), "SetString")]
     class playerPrefab11
     {
-        static bool Prefix(string key, string value)
-        {
-            FakePlayerPrefab.SetString(key, value);
-            return false;
-        }
+    static bool Prefix(string key, string value)
+    {
+        FakePlayerPrefab.SetString(key, value);
+        return false;
+    }
     }*/
     #endregion
     [HarmonyPatch(typeof(Cute.JMFOFKDCHEC), "GetNowTime")]
     class time0
     {
-        static bool Prefix(ref DateTime __result,long ENHKIFKKOCH, long PMBPHMNBLLF)
+        static bool Prefix(ref DateTime __result, long ENHKIFKKOCH, long PMBPHMNBLLF)
         {
             __result = PCRSettings.Instance.globalSetting.GetTime();
             return false;
@@ -513,9 +558,9 @@ namespace PCRCalculator.Hook
     {
         static bool Prefix(MasterClanBattleSchedule.ClanBattleSchedule __instance, ref ObscuredString __result)
         {
-            __result = "2022/06/25 4:59:59";
+            __result = "2025/06/25 4:59:59";
             return false;
         }
     }
-    
+
 }

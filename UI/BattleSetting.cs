@@ -135,7 +135,7 @@ namespace PCRCalculator.UI
                         }
                         InputForm inputForm = new InputForm();
                         inputForm.Show();
-                        inputForm.Init("输入UB时间", (listBox.SelectedItem).ToString(), a =>
+                        inputForm.Init("输入UB时间", (float)listBox.SelectedItem, a =>
                           {
                               //listBox.Items[listBox.SelectedIndex] = int.Parse(a);
                               var data = list[MainList.SelectedIndex];

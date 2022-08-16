@@ -274,7 +274,7 @@ namespace PCRCalculator.Tool
             {
                 loadData.data.user_my_party = new List<UserMyParty>();
             }
-            var dd = loadData.data.user_my_party.Find(a => a.party_label_type == data.party_label_type && a.party_number == data.party_number);
+            var dd = loadData.data.user_my_party.Find(a => a.tab_number == data.tab_number && a.party_number == data.party_number);
             if (dd != null)
                 loadData.data.user_my_party.Remove(dd);
             UserMyParty party = new UserMyParty(data.tab_number, data.party_number, data.party_label_type,
@@ -286,6 +286,12 @@ namespace PCRCalculator.Tool
         {
 
         }
+        public void OnSetMyPage(string json)
+        {
+            MyPageReceive myPage = JsonConvert.DeserializeObject<MyPageReceive>(json);
+            loadData.data.my_page = myPage.my_page_info;
+            Save(1);
+        }
         public List<UserMyParty> GetAreaOppoentList()
         {
             if (loadData.data.user_my_party == null)
@@ -295,7 +301,7 @@ namespace PCRCalculator.Tool
             List<UserMyParty> list = new List<UserMyParty>();
             foreach (var data in loadData.data.user_my_party)
             {
-                if (!data.AllZero())
+                if (!data.AllZero() && data.tab_number==1)
                 {
                     list.Add(data);
                 }
@@ -378,11 +384,21 @@ namespace PCRCalculator.Tool
         {
             return Elements.ManagerSingleton<Elements.MasterDataManager>.Instance != null;
         }
+        public static int GetOrinUnitid(int unitid)
+        {
+            switch (unitid)
+            {
+                case 170101:
+                    return 105701;
+                default:
+                    return unitid;
+            }
+        }
         public string GetUnitNameByID(int unitid)
         {
             try
             {
-                if (unitNameDic.TryGetValue(unitid, out string value))
+                if (unitNameDic.TryGetValue(GetOrinUnitid(unitid), out string value))
                 {
                     return value;
                 }
@@ -563,6 +579,13 @@ namespace PCRCalculator.Tool
         }
         public int GetUnitLove(int unitid)
         {
+            if (lovedic.Count == 0)
+            {
+                foreach (var lov in loadData.data.user_chara_info)
+                {
+                    lovedic.Add(lov.chara_id, lov);
+                }
+            }
             if (lovedic.TryGetValue(unitid / 100, out var value))
             {
                 return value.love_level;

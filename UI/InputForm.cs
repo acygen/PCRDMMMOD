@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using UnityEngine;
 
 namespace PCRCalculator.UI
 {
@@ -25,6 +26,19 @@ namespace PCRCalculator.UI
             this.callBack = callBack;
             this.cancel = cancel;
         }
+        public void Init(string help,float value, Action<string> callBack, Action cancel = null)
+        {
+            label1.Text = help;
+            int ubTime = (int)value;
+            int priority = Mathf.RoundToInt(10.0f * value) - 10 * ubTime;
+            bool waitBOSSUB = value * 10 - (int)(value * 10) > 0;
+            checkBox1.Checked = waitBOSSUB;
+            textBox1.Text = ubTime.ToString();
+            numericUpDown1.Value = priority;
+            this.callBack = callBack;
+            this.cancel = cancel;
+
+        }
 
         private void button2_Click(object sender, EventArgs e)
         {
@@ -39,6 +53,10 @@ namespace PCRCalculator.UI
             try
             {
                 p = int.Parse(textBox1.Text) + (float)((int)numericUpDown1.Value) / 10.0f;
+                if (checkBox1.Checked)
+                {
+                    p += 0.01f;
+                }
             }
             catch
             {
