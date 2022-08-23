@@ -58,7 +58,7 @@ namespace PCRCalculator.Hook
                     PCRBattle.Instance.OnBossDEFChange(__instance, "初始化", parts.Index);
                 }
             }
-            else
+            else if(__instance.IsBoss)
             {
                 PCRBattle.Instance.OnBossDEFChange(__instance, "初始化", 0);
             }
@@ -483,6 +483,7 @@ namespace PCRCalculator.Hook
     [HarmonyPatch(typeof(UnitCtrl), "SetDamageImpl")]
     public class UnitCtrlAdd050
     {
+        public static int actionid = 0;
         public static void Postfix(UnitCtrl __instance,ref long __result, Elements.DamageData _damageData,bool _critical, Skill _skill)
         {
             //UnityEngine.Debug.Log($"aaa");
@@ -495,7 +496,53 @@ namespace PCRCalculator.Hook
                 int skillid = _skill == null ? 0 : _skill.SkillId;
                 pos = 100;
                 PlayerDamageData damageData = new PlayerDamageData(exectTime, battleManager.JJCJONPDGIM, __result, _critical, _damageData.CriticalRate, 2f * _damageData.CriticalDamageRate, skillid);
-                int sourceid = _damageData.Source == null ? 0 : _damageData.Source.UnitId;
+                int sourceid = 0;
+                if(_damageData.Source != null)
+                {
+                    if (_damageData.Source.IsSummonOrPhantom || _damageData.Source.IsDivision)
+                    {
+                        sourceid = _damageData.Source.SummonSource?.UnitId ?? 0;
+                    }
+                    else
+                    {
+                        sourceid = _damageData.Source.UnitId;
+                    }
+                }
+                if (_skill != null)
+                {
+                    //Cute.ClientLog.AccumulateClientLog($"{_skill.SkillName}");
+                    ActionParameter action = _skill.ActionParameters.Find(a => a.ActionId == actionid);
+                    if (action != null)
+                    {
+                        if(action.HitOnceDic.TryGetValue(_damageData.Target,out var value) && !value)
+                        {
+                            var criticalList = action.CriticalDataDictionary[_damageData.Target];
+                            float num2 = 0;
+                            //string debugSTR = "";
+                            foreach(var c in criticalList)
+                            {
+                                float criRateFx = Mathf.Min(1, Math.Max(0, _damageData.CriticalRate));
+                                float criDamRateFx = Mathf.Max(1, _damageData.CriticalDamageRate*2f);
+                                float num3 = c.ExpectedDamageNotCritical * (1 + criRateFx * (criDamRateFx - 1));
+                                num2 += Mathf.Min (num3, 999999);
+                                //debugSTR += $"-{c.ExpectedDamage}/{c.ExpectedDamageNotCritical}/{criRateFx}/{criDamRateFx}\n";
+                            }
+                            UnitCtrl tar = _damageData.Target.Owner;
+                            if (tar.IsAbnormalState(UnitCtrl.eAbnormalState.LOG_ALL_BARRIR))
+                            {
+                                float abnormalStateSubValue3 = tar.GetAbnormalStateSubValue(UnitCtrl.eAbnormalStateCategory.LOG_ALL_BARRIR);
+                                if (num2 > abnormalStateSubValue3)
+                                {
+                                    float abnormalStateMainValue3 = tar.GetAbnormalStateMainValue(UnitCtrl.eAbnormalStateCategory.LOG_ALL_BARRIR);
+                                    float num9 = (Mathf.Log((num2 - abnormalStateSubValue3) / abnormalStateMainValue3 + 1f) * abnormalStateMainValue3 + abnormalStateSubValue3) / num2;
+                                    num2 *= num9;
+                                }
+                            }
+                            //Cute.ClientLog.AccumulateClientLog($"期望伤害{num2}-{criticalList.Count}\n{debugSTR}");
+                            damageData.exceptDamageForLogBarrier = (int)num2;
+                        }
+                    }
+                }
                 pos = 200;
                 PCRBattle.Instance.OnReceiveDamage(__instance.UnitId, sourceid, damageData);
                 pos = 300;
@@ -503,28 +550,18 @@ namespace PCRCalculator.Hook
             catch (Exception ex)
             {
 
-                UnityEngine.Debug.Log($"[{pos}]{ex.ToString()}");
+                Cute.ClientLog.AccumulateClientLog($"[{pos}]{ex.ToString()}");
             }
             
         }
 
     }
-    //[HarmonyPatch(typeof(UnitCtrl), "SetDamage")]
+    [HarmonyPatch(typeof(UnitCtrl), "SetDamage")]
     public class UnitCtrlAdd06
     {
         static bool Prefix(UnitCtrl __instance, Elements.DamageData _damageData, bool _byAttack, int _actionId, ActionParameter.OnDamageHitDelegate _onDamageHit = null, bool _hasEffect = true, Skill _skill = null, bool _energyAdd = true, Action _onDefeat = null, bool _noMotion = false, float _damageWeight = 1f, float _damageWeightSum = 1f, Func<int, float, int> _upperLimitFunc = null, float _energyChargeMultiple = 1f)
         {
-            /*if (PCRBattle.Instance.UseFakeCritical)
-            {
-                if (__instance.IsOther)
-                {
-                    BattleManagerHook.RandomState = PCRBattle.Instance.FakeCritLev_enemy;
-                }
-                else
-                {
-                    BattleManagerHook.RandomState = PCRBattle.Instance.FakeCritLev_player;
-                }
-            }*/
+            UnitCtrlAdd050.actionid = _actionId;
             return true;
         }
 

@@ -601,17 +601,17 @@ namespace PCRCalculator.Tool
                     }
                     break;
                 case eBattleLogType.SET_DAMAGE:
-                    /*try
+                    try
                     {
                         
-                        PlayerDamageData damageData = new PlayerDamageData(data.logicalFrame,data.realFrame,logData.value1 ,logData.type<20,0,0,logData.action_id);
-                        OnReceiveDamage(logData.target_unit_id, logData.source_unit_id, damageData);
+                        //PlayerDamageData damageData = new PlayerDamageData(data.logicalFrame,data.realFrame,logData.value1 ,logData.type<20,0,0,logData.action_id);
+                        //OnReceiveDamage(logData.target_unit_id, logData.source_unit_id, damageData);
                         OnUnitHPChange(logData.target_unit_id, false,(int)logData.current_value,data.des2);
                     }
                     catch (System.Exception e)
                     {
                         Cute.ClientLog.AccumulateClientLog("添加角色伤害时出错！" + e.Message);
-                    }*/
+                    }
                     break;
                 case eBattleLogType.MISS:
                     try
@@ -662,7 +662,7 @@ namespace PCRCalculator.Tool
                 bool canAdd = false;
                 if (UnitUtility.JudgeIsBoss(target))
                 {
-                    if (source > 0 && source < 200000)
+                    if (source >= 0 && source < 200000)
                     {
                         canAdd = true;
                     }
@@ -690,7 +690,7 @@ namespace PCRCalculator.Tool
 
                     }
                     //totalDamageExcept += (long)(basedamage + criEX * damageData.criValue);
-                    totalDamageExcept += (long)(damageData.damage / (damageData.isCri ? damageData.criDamageValue : 1) * (1 + damageData.criValue * (damageData.criDamageValue - 1)));
+                    totalDamageExcept += (long)damageData.exceptDamageForLogBarrier;
                     clanBattleDamageList.Add(new DamageGetData(damageData.frame, totalDamage, totalDamageExcept));
                 }
 
@@ -837,6 +837,7 @@ namespace PCRCalculator.Tool
                         if (frame == 0)
                         {
                             describe += targetName + "初始化HP：" + current_value;
+                            des2 = "初始化";
                             break;
                         }
                         string damageTypedes = "魔法伤害";
@@ -848,7 +849,7 @@ namespace PCRCalculator.Tool
                         if (!string.IsNullOrEmpty(sourceName))
                         {
                             describe += sourceName;
-                            des2 = $"来自:{sourceName}";
+                            des2 = $"来自:{sourceName}({value1})";
                         }
                         if (!string.IsNullOrEmpty(actionname))
                         {
@@ -1766,6 +1767,7 @@ namespace PCRCalculator.Tool
         public bool canAddToTotal;
         public int target;
         public int source;
+        public int exceptDamageForLogBarrier;
 
         public PlayerDamageData() { }
 

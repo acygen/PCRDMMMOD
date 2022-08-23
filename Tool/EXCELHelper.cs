@@ -608,6 +608,18 @@ namespace PCRCalculator.Tool
                     foreach (var timeData in timedata)
                     {
                         int pos = 2 + charLong * timeData.idx;
+
+                        if(int.TryParse(worksheet2.Cells[lineNum-1, 1].Value?.ToString(),out int frame))
+                        {
+                            if (frame == timeData.frame)
+                            {
+                                if(string.IsNullOrEmpty(worksheet2.Cells[lineNum - 1, pos].Value?.ToString()))
+                                {
+                                    lineNum--;
+                                }
+                            }
+                        }
+
                         worksheet2.Cells[lineNum, 1].Value = timeData.frame;
                         //worksheet2.Cells[lineNum, pos].Value = timeData.describeA;//.Replace(/<[^>] +>/ g, "");
                         AddStringWithJudge(worksheet2, lineNum, pos, timeData.describeA);
@@ -689,7 +701,15 @@ namespace PCRCalculator.Tool
                             }
                             else
                             {
-                                lineNum++;
+                                if (timeData.frame == lasttimeline.frame)
+                                {
+                                    if(!string.IsNullOrEmpty(worksheet3.Cells[lineNum, pos].Value?.ToString()))
+                                    {
+                                        lineNum++;
+                                    }
+                                }
+                                else
+                                    lineNum++;
                             }
                             currentFream0 = timeData.frame;
                             worksheet3.Cells[lineNum, 1].Value = timeData.frame;
@@ -707,6 +727,7 @@ namespace PCRCalculator.Tool
                                 if (detailBlong0 > 1)
                                     worksheet3.Cells[lineNum, pos + detailAlong0, lineNum, pos + detailAlong0 + detailBlong0 - 1].Merge = true;
                             }
+                            lasttimeline = timeData;
                         }
                         lineNum++;
                     }
