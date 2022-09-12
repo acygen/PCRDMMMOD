@@ -87,6 +87,7 @@ namespace SetBox
         private Label label20;
         private TextBox VersionText;
         private Button ConfigVersion;
+        private CheckBox checkBoxMutiTarget;
         private PCRSettings Settings;
         #endregion
         public ManagerForm()
@@ -217,6 +218,7 @@ namespace SetBox
             checkBox2.Checked = Settings.battleSetting.useLogBarrier;
             timeCheck2.Checked = Settings.battleSetting.showRealFrame;
             showUICheck.Checked = Settings.battleSetting.showUI;
+            checkBoxMutiTarget.Checked = Settings.battleSetting.mutiTargetShowMDEF;
         }
 		
 
@@ -325,6 +327,7 @@ namespace SetBox
             this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.label16 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.checkBoxMutiTarget = new System.Windows.Forms.CheckBox();
             this.statusStrip1.SuspendLayout();
             this.clanSetting.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cb_seed)).BeginInit();
@@ -853,6 +856,7 @@ namespace SetBox
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.checkBoxMutiTarget);
             this.tabPage2.Controls.Add(this.showUICheck);
             this.tabPage2.Controls.Add(this.label19);
             this.tabPage2.Controls.Add(this.label18);
@@ -1164,6 +1168,17 @@ namespace SetBox
             this.textBox1.Text = "2021/06/25 10:00:00";
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
+            // checkBoxMutiTarget
+            // 
+            this.checkBoxMutiTarget.AutoSize = true;
+            this.checkBoxMutiTarget.Location = new System.Drawing.Point(23, 246);
+            this.checkBoxMutiTarget.Name = "checkBoxMutiTarget";
+            this.checkBoxMutiTarget.Size = new System.Drawing.Size(174, 31);
+            this.checkBoxMutiTarget.TabIndex = 28;
+            this.checkBoxMutiTarget.Text = "多目标显示魔防";
+            this.checkBoxMutiTarget.UseVisualStyleBackColor = true;
+            this.checkBoxMutiTarget.CheckedChanged += new System.EventHandler(this.checkBoxMutiTarget_CheckedChanged);
+            // 
             // ManagerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 27F);
@@ -1384,6 +1399,12 @@ namespace SetBox
             {
                 MessageBox.Show("输入错误！");
             }
+        }
+
+        private void checkBoxMutiTarget_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.battleSetting.mutiTargetShowMDEF = checkBoxMutiTarget.Checked;
+            Settings.Save(5);
         }
     }
 }

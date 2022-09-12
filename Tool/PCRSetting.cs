@@ -53,6 +53,7 @@ namespace PCRCalculator.Tool
         public static bool showExectTime => Instance.battleSetting.showExectTime;
         public static bool showExectTimeReal => Instance.battleSetting.showRealFrame;
         public static bool showBossDEF => Instance.battleSetting.showBossDEF;
+        public static bool mutiTargetShowMDEF => Instance.battleSetting.mutiTargetShowMDEF;
         public static int battleSeed 
         { 
             get 
@@ -743,6 +744,7 @@ namespace PCRCalculator.Tool
         public bool showBossDEF = true;
         public bool useLogBarrier = true;
         public bool showUI = false;
+        public bool mutiTargetShowMDEF = false;
     }
     public class MyPlayerPrefab
     {

@@ -52,7 +52,12 @@ namespace PCRCalculator.Hook
                     BattleHeaderController instance = SingletonMonoBehaviour<BattleHeaderController>.Instance;
                     if (instance != null)
                     {
-                        UpdateBossDEF(instance.BossGauge, __instance.Owner.Def, __instance.Owner.MagicDef,__instance.Owner.Energy);
+                        /*if (__instance.Owner.IsPartsBoss)
+                        {
+                            UpdateBossDEF(instance.BossGauge, __instance.Owner);
+                        }
+                        else*/
+                            UpdateBossDEF( __instance.Owner);
                     }
                 }
             }
@@ -63,16 +68,43 @@ namespace PCRCalculator.Hook
                 PCRBattle.Instance.OnBossDEFChange(__instance.Owner, des);
             }
         }
-        public static void UpdateBossDEF(PartsBossGauge __instance, int def, int mdef,float tp)
+        public static void UpdateBossDEF(UnitCtrl a)
         {
-            string inputstr = "DEF:" + def + "    MDEF:" + mdef + "    TP:" + tp.ToString("F2");
-            CustomUILabel nameAndLevel = Traverse.Create(__instance).Field("nameAndLevel").GetValue<CustomUILabel>();
-            nameAndLevel.SetText(inputstr);
+            int pos = 0;
+            try
+            {
+                PartsBossGauge instance = SingletonMonoBehaviour<BattleHeaderController>.Instance.BossGauge;
+                if (instance == null || a == null)
+                    return;
+                pos = 1000;
+                string inputstr = "DEF:" + a.Def + "    MDEF:" + a.MagicDef + "    TP:" + a.Energy.ToString("F2");
+                pos = 2000;
+                if (a.IsPartsBoss)
+                {
+                    bool showMDEF = PCRSettings.mutiTargetShowMDEF;
+                    inputstr = showMDEF ? "MDEF:" : "DEF:";
+                    pos += 10;
+                    foreach (PartsData part in a.BossPartsListForBattle)
+                    {
+                        inputstr += showMDEF ? $"{part.GetMagicDefZero()}  " : $"{part.GetDefZero()}  ";
+                        pos += 100;
+                    }
+                    inputstr += $"TP:{a.Energy:F2}";
+                }
+                pos = 3000;
+                CustomUILabel nameAndLevel = Traverse.Create(instance).Field("nameAndLevel").GetValue<CustomUILabel>();
+                pos = 4000;
+                nameAndLevel.SetText(inputstr);
+            }
+            catch(Exception eex)
+            {
+                Cute.ClientLog.AccumulateClientLog($"ERROR AT:{pos}" + eex.Message);
+            }
         }
         public static void UpdateBossTP(UnitCtrl a)
         {
-            BattleHeaderController instance = SingletonMonoBehaviour<BattleHeaderController>.Instance;
-            UpdateBossDEF(instance.BossGauge, a.Def, a.MagicDef, a.Energy);
+           //BattleHeaderController instance = SingletonMonoBehaviour<BattleHeaderController>.Instance;
+            UpdateBossDEF(a);
         }
 
     }
@@ -86,6 +118,8 @@ namespace PCRCalculator.Hook
             Battlelog.MyLog(null, Elements.eBattleLogType.SET_BUFF_DEBUFF, (int)_kind, _value, __instance.Index, 0, 0, (_enable ? 1 : 0), 200, _source, __instance.Owner);
             string des = $"来自{PCRBattle.Instance.GetName(_source?.UnitId ?? 0)}，值{_value}";
             PCRBattle.Instance.OnBossDEFChange(__instance.Owner,des,__instance.Index);
+            Buffdef0.UpdateBossDEF( __instance.Owner);
+
         }
     }
 
