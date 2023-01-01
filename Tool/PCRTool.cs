@@ -206,6 +206,11 @@ namespace PCRCalculator.Tool
                 receiveParam.data.unit_data = PCRSettings.Instance.GetUnitDataS(unitid);
                 result = JsonConvert.SerializeObject(receiveParam);
             }
+            else if (URL.Contains("daily_task/top"))
+            {
+                var deck = new MusicTop();
+                result = JsonConvert.SerializeObject(deck);
+            }
 
             if (result == "ERROR")
             {

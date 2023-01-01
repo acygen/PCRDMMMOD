@@ -130,6 +130,9 @@ namespace SetBox
                 var loadIndex = Settings.loadData;
                 loadIndex.data.user_info.user_name = username_txt.Text;
                 loadIndex.data.user_info.team_level = int.Parse(unitlevel_txt.Text);
+                int exp = Settings.GetTeamExp(loadIndex.data.user_info.team_level);
+                if (exp > 0)
+                    loadIndex.data.user_info.team_exp = exp;
 
                 Settings.globalSetting.userAssestPath = assestPath_txt.Text;
                 Settings.globalSetting.useUserAssestPath = useUserPath_check.Checked;

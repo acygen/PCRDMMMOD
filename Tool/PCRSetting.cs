@@ -381,6 +381,21 @@ namespace PCRCalculator.Tool
                 ClientLog.AccumulateClientLog("ERROR:" + ex.Message + "\n" + ex.StackTrace);
             }
         }
+        public int GetTeamExp(int teamLevel)
+        {
+            try
+            {
+                if (CanSetCharData())
+                {
+                    return Elements.ManagerSingleton<Elements.MasterDataManager>.Instance.masterExperienceTeam[teamLevel].total_exp + 1;
+                }
+            }
+            catch
+            {
+                return 0;
+            }
+            return 0;
+        }
         public bool CanSetCharData()
         {
             return Elements.ManagerSingleton<Elements.MasterDataManager>.Instance != null;
