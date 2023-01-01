@@ -143,7 +143,7 @@ namespace PCRCalculator.Hook
             yield break;
         }
     }
-    [HarmonyPatch(typeof(Cute.AssetManager), "PrepareManifestList")]
+    //[HarmonyPatch(typeof(Cute.AssetManager), "PrepareManifestList")]
     class main1
     {
         /*static bool Prefix(Cute.AssetManager __instance, out List<string> OJIGJPJBCIK, out List<string> BEFPMFMIJAJ, bool MHGAAPHOMIG)
@@ -254,7 +254,7 @@ namespace PCRCalculator.Hook
         }
 
     }
-    [HarmonyPatch(typeof(Cute.AssetManager), "LoadManifest")]
+    //[HarmonyPatch(typeof(Cute.AssetManager), "LoadManifest")]
     class main12
     {
         static bool Prefix(Cute.AssetManager __instance, string IPMEMPDNLNM, Cute.LFEKLJKFNPE.OHMMHCICKCF LILCMDCAFLM)

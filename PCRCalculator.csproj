@@ -75,6 +75,6 @@
     <Folder Include="json\" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy /Y &quot;$(targetDir)$(ProjectName).dll&quot; &quot;D:\_P\PCR\PrincessConnectReDive\Plugins&quot;" />
+    <Exec Command="copy /Y &quot;$(targetDir)$(ProjectName).dll&quot; &quot;I:\PrincessConnectReDive\Plugins&quot;" />
   </Target>
 </Project>

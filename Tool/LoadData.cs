@@ -222,10 +222,14 @@ namespace PCRCalculator.Tool
         public object user_jewel;
         public object user_gold;
         public List<UnitDataS> unit_list;
-        public List<UserChara> user_chara_info;
+        public List<object> growth_unit_list = new List<object>();
+        public List<object> user_redeem_unit = new List<object>();
+        public List<UserChara> user_chara_info; 
         public List<Deck> deck_list;
         public object item_list;
         public object user_equip;
+        public List<object> user_ex_equip = new List<object>();
+        public List<object> user_clan_battle_ex_equip_restriction = new List<object>();
         public object shop;
         public object ini_setting;
         public int max_storage_num;
@@ -234,6 +238,7 @@ namespace PCRCalculator.Tool
         public int can_campaign_gacha;
         public object gacha_point_info;
         public List<int> read_story_ids;
+        public List<int> limit_still_ids = new List<int>();
         public List<string> unlock_story_ids;
         public object event_statuses;
         public object drj;
@@ -247,24 +252,55 @@ namespace PCRCalculator.Tool
         public object dispatch_units;
         public object clan_battle;
         public object voice;
-        public long qr;
+        public object csc;
+
+        public List<object> part_maintenance_status = new List<object>();
+        public int today_start_level;
+        public int bank_bought;
+
         public int ddn;
-        public long pa;
-        //public long as;
-        public long gs;
-        public long tq;
-        public long sv;
-        public long jb;
-        public long tf;
-        public long ue;
-        public long em;
-        public long bv;
-        public long gl;
-        public long ccb;
-        public long pfm;
-        public long tt;
-        public int errm = 250;
-        public long ubr = 100;
+        public int cbm;
+        public int csm;
+        public int cr;
+        public int een_n;
+        public int een_r;
+        public int chr;
+        public int cbs;
+        public int cbtl;
+        public int cbsa;
+        public int legion_term;
+        public int cbel;
+        public int errm;
+        public string recheck_dmm_jewel;
+        public int tt;
+        public int cgl;
+        public int ebm;
+        public int dbm;
+        public int lsm;
+        public int evmb;
+        public int nls;
+        public int bnk;
+        public int sma;
+        public int cbr;
+        public int rsc;
+        public int evfm;
+        public int ubr;
+        public int trb;
+        public int tcb;
+        public int giu;
+        public int shmb;
+        public int mss;
+        public int sar;
+        public int exeq;
+        public int tvq;
+        public int rug;
+        public int ags;
+        public int wac_start_time;
+        public int wac_end_time;
+
+        public object taq;
+
+
         public int my_page_exists;
         public List<MyPage> my_page = new List<MyPage>();
         public void ReplaceUnitList(List<UnitDataS> unit_list_change,int type)
@@ -378,6 +414,11 @@ namespace PCRCalculator.Tool
         public int unit_id_3;
         public int unit_id_4;
         public int unit_id_5;
+        public object general_property_1;
+        public object general_property_2;
+        public object general_property_3;
+        public object general_property_4;
+        public object general_property_5;
     }
     public class UserInfo
     {
@@ -463,6 +504,7 @@ namespace PCRCalculator.Tool
         public int id;
         public int music_id;
         public int still_skin_id;
+        public int frame_id;
 
         public MyPage() { }
         public MyPage(int type, int id, int music_id, int still_skin_id)

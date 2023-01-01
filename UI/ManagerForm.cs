@@ -300,6 +300,7 @@ namespace SetBox
             this.label22 = new System.Windows.Forms.Label();
             this.battleTool = new System.Windows.Forms.TabControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.checkBoxMutiTarget = new System.Windows.Forms.CheckBox();
             this.showUICheck = new System.Windows.Forms.CheckBox();
             this.label19 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
@@ -327,7 +328,6 @@ namespace SetBox
             this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.label16 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
-            this.checkBoxMutiTarget = new System.Windows.Forms.CheckBox();
             this.statusStrip1.SuspendLayout();
             this.clanSetting.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cb_seed)).BeginInit();
@@ -350,16 +350,16 @@ namespace SetBox
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1,
             this.toolStripProgressBar1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 354);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 356);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(551, 26);
+            this.statusStrip1.Size = new System.Drawing.Size(551, 24);
             this.statusStrip1.TabIndex = 1;
             this.statusStrip1.Text = "Ready.";
             // 
             // toolStripStatusLabel1
             // 
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(167, 20);
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(131, 19);
             this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
             this.toolStripStatusLabel1.Click += new System.EventHandler(this.toolStripStatusLabel1_Click);
             this.toolStripStatusLabel1.TextChanged += new System.EventHandler(this.toolStripStatusLabel1_TextChanged);
@@ -391,10 +391,10 @@ namespace SetBox
             this.clanSetting.Controls.Add(this.label3);
             this.clanSetting.Controls.Add(this.label2);
             this.clanSetting.Controls.Add(this.label1);
-            this.clanSetting.Location = new System.Drawing.Point(4, 36);
+            this.clanSetting.Location = new System.Drawing.Point(4, 30);
             this.clanSetting.Name = "clanSetting";
             this.clanSetting.Padding = new System.Windows.Forms.Padding(3);
-            this.clanSetting.Size = new System.Drawing.Size(531, 301);
+            this.clanSetting.Size = new System.Drawing.Size(531, 307);
             this.clanSetting.TabIndex = 0;
             this.clanSetting.Text = "会战设置";
             this.clanSetting.UseVisualStyleBackColor = true;
@@ -415,7 +415,7 @@ namespace SetBox
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(347, 126);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(39, 27);
+            this.label8.Size = new System.Drawing.Size(32, 21);
             this.label8.TabIndex = 31;
             this.label8.Text = "HP";
             // 
@@ -424,7 +424,7 @@ namespace SetBox
             this.checkBox1.AutoSize = true;
             this.checkBox1.Location = new System.Drawing.Point(364, 161);
             this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(174, 31);
+            this.checkBox1.Size = new System.Drawing.Size(141, 25);
             this.checkBox1.TabIndex = 30;
             this.checkBox1.Text = "使用固定的种子";
             this.checkBox1.UseVisualStyleBackColor = true;
@@ -436,7 +436,7 @@ namespace SetBox
             this.label11.ForeColor = System.Drawing.Color.Red;
             this.label11.Location = new System.Drawing.Point(208, 95);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(225, 23);
+            this.label11.Size = new System.Drawing.Size(185, 20);
             this.label11.TabIndex = 29;
             this.label11.Text = "默认90s，补偿刀等自己调整";
             // 
@@ -447,7 +447,7 @@ namespace SetBox
             this.label10.ForeColor = System.Drawing.Color.Red;
             this.label10.Location = new System.Drawing.Point(208, 62);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(325, 23);
+            this.label10.Size = new System.Drawing.Size(266, 20);
             this.label10.TabIndex = 28;
             this.label10.Text = "1-3A，4-10B，11-34C，35-45D，45+E";
             // 
@@ -458,7 +458,7 @@ namespace SetBox
             this.label5.ForeColor = System.Drawing.Color.Red;
             this.label5.Location = new System.Drawing.Point(208, 27);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(237, 23);
+            this.label5.Size = new System.Drawing.Size(195, 20);
             this.label5.TabIndex = 27;
             this.label5.Text = "1016为巨蟹座，以后每次加一";
             this.label5.Click += new System.EventHandler(this.label5_Click);
@@ -477,7 +477,7 @@ namespace SetBox
             542101086,
             -2147483648});
             this.cb_seed.Name = "cb_seed";
-            this.cb_seed.Size = new System.Drawing.Size(239, 34);
+            this.cb_seed.Size = new System.Drawing.Size(239, 29);
             this.cb_seed.TabIndex = 26;
             this.cb_seed.Value = new decimal(new int[] {
             666,
@@ -494,7 +494,7 @@ namespace SetBox
             0,
             0});
             this.boss_hp.Name = "boss_hp";
-            this.boss_hp.Size = new System.Drawing.Size(101, 34);
+            this.boss_hp.Size = new System.Drawing.Size(101, 29);
             this.boss_hp.TabIndex = 25;
             this.boss_hp.Value = new decimal(new int[] {
             6000000,
@@ -516,7 +516,7 @@ namespace SetBox
             0,
             0});
             this.boss_num.Name = "boss_num";
-            this.boss_num.Size = new System.Drawing.Size(101, 34);
+            this.boss_num.Size = new System.Drawing.Size(101, 29);
             this.boss_num.TabIndex = 24;
             this.boss_num.Value = new decimal(new int[] {
             1,
@@ -538,7 +538,7 @@ namespace SetBox
             0,
             0});
             this.battle_time.Name = "battle_time";
-            this.battle_time.Size = new System.Drawing.Size(100, 34);
+            this.battle_time.Size = new System.Drawing.Size(100, 29);
             this.battle_time.TabIndex = 23;
             this.battle_time.Value = new decimal(new int[] {
             90,
@@ -560,7 +560,7 @@ namespace SetBox
             0,
             0});
             this.cb_lap.Name = "cb_lap";
-            this.cb_lap.Size = new System.Drawing.Size(100, 34);
+            this.cb_lap.Size = new System.Drawing.Size(100, 29);
             this.cb_lap.TabIndex = 22;
             this.cb_lap.Value = new decimal(new int[] {
             1,
@@ -582,7 +582,7 @@ namespace SetBox
             0,
             0});
             this.cb_id.Name = "cb_id";
-            this.cb_id.Size = new System.Drawing.Size(100, 34);
+            this.cb_id.Size = new System.Drawing.Size(100, 29);
             this.cb_id.TabIndex = 21;
             this.cb_id.Value = new decimal(new int[] {
             1016,
@@ -595,7 +595,7 @@ namespace SetBox
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(23, 159);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(112, 27);
+            this.label4.Size = new System.Drawing.Size(90, 21);
             this.label4.TabIndex = 19;
             this.label4.Text = "当前种子：";
             // 
@@ -604,7 +604,7 @@ namespace SetBox
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(208, 126);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(32, 27);
+            this.label7.Size = new System.Drawing.Size(26, 21);
             this.label7.TabIndex = 14;
             this.label7.Text = "王";
             // 
@@ -613,7 +613,7 @@ namespace SetBox
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(23, 126);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(112, 27);
+            this.label6.Size = new System.Drawing.Size(90, 21);
             this.label6.TabIndex = 7;
             this.label6.Text = "当前挑战：";
             // 
@@ -632,7 +632,7 @@ namespace SetBox
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(23, 93);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(112, 27);
+            this.label3.Size = new System.Drawing.Size(90, 21);
             this.label3.TabIndex = 4;
             this.label3.Text = "战斗时间：";
             // 
@@ -641,7 +641,7 @@ namespace SetBox
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(23, 60);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(112, 27);
+            this.label2.Size = new System.Drawing.Size(90, 21);
             this.label2.TabIndex = 2;
             this.label2.Text = "周目数量：";
             // 
@@ -650,7 +650,7 @@ namespace SetBox
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(23, 27);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(112, 27);
+            this.label1.Size = new System.Drawing.Size(90, 21);
             this.label1.TabIndex = 0;
             this.label1.Text = "会战序号：";
             // 
@@ -672,9 +672,9 @@ namespace SetBox
             this.MainSetting.Controls.Add(this.button1);
             this.MainSetting.Controls.Add(this.label23);
             this.MainSetting.Controls.Add(this.label22);
-            this.MainSetting.Location = new System.Drawing.Point(4, 36);
+            this.MainSetting.Location = new System.Drawing.Point(4, 30);
             this.MainSetting.Name = "MainSetting";
-            this.MainSetting.Size = new System.Drawing.Size(531, 301);
+            this.MainSetting.Size = new System.Drawing.Size(531, 307);
             this.MainSetting.TabIndex = 3;
             this.MainSetting.Text = "基础设置";
             this.MainSetting.UseVisualStyleBackColor = true;
@@ -684,7 +684,7 @@ namespace SetBox
             this.replaceURLCheck.AutoSize = true;
             this.replaceURLCheck.Location = new System.Drawing.Point(215, 270);
             this.replaceURLCheck.Name = "replaceURLCheck";
-            this.replaceURLCheck.Size = new System.Drawing.Size(236, 31);
+            this.replaceURLCheck.Size = new System.Drawing.Size(192, 25);
             this.replaceURLCheck.TabIndex = 16;
             this.replaceURLCheck.Text = "将Manifest定向到本地";
             this.replaceURLCheck.UseVisualStyleBackColor = true;
@@ -695,7 +695,7 @@ namespace SetBox
             this.uselog.AutoSize = true;
             this.uselog.Location = new System.Drawing.Point(215, 239);
             this.uselog.Name = "uselog";
-            this.uselog.Size = new System.Drawing.Size(145, 31);
+            this.uselog.Size = new System.Drawing.Size(117, 25);
             this.uselog.TabIndex = 14;
             this.uselog.Text = "输出log信息";
             this.uselog.UseVisualStyleBackColor = true;
@@ -716,7 +716,7 @@ namespace SetBox
             this.logWebJson.AutoSize = true;
             this.logWebJson.Location = new System.Drawing.Point(215, 208);
             this.logWebJson.Name = "logWebJson";
-            this.logWebJson.Size = new System.Drawing.Size(154, 31);
+            this.logWebJson.Size = new System.Drawing.Size(125, 25);
             this.logWebJson.TabIndex = 12;
             this.logWebJson.Text = "输出通信内容";
             this.logWebJson.UseVisualStyleBackColor = true;
@@ -726,7 +726,7 @@ namespace SetBox
             this.useOwnDB.AutoSize = true;
             this.useOwnDB.Location = new System.Drawing.Point(23, 208);
             this.useOwnDB.Name = "useOwnDB";
-            this.useOwnDB.Size = new System.Drawing.Size(160, 31);
+            this.useOwnDB.Size = new System.Drawing.Size(129, 25);
             this.useOwnDB.TabIndex = 11;
             this.useOwnDB.Text = "使用自定义db";
             this.useOwnDB.UseVisualStyleBackColor = true;
@@ -736,7 +736,7 @@ namespace SetBox
             this.cryptfile.AutoSize = true;
             this.cryptfile.Location = new System.Drawing.Point(215, 177);
             this.cryptfile.Name = "cryptfile";
-            this.cryptfile.Size = new System.Drawing.Size(174, 31);
+            this.cryptfile.Size = new System.Drawing.Size(141, 25);
             this.cryptfile.TabIndex = 10;
             this.cryptfile.Text = "资源文件名加密";
             this.cryptfile.UseVisualStyleBackColor = true;
@@ -746,7 +746,7 @@ namespace SetBox
             this.ignore2.AutoSize = true;
             this.ignore2.Location = new System.Drawing.Point(23, 177);
             this.ignore2.Name = "ignore2";
-            this.ignore2.Size = new System.Drawing.Size(174, 31);
+            this.ignore2.Size = new System.Drawing.Size(141, 25);
             this.ignore2.TabIndex = 9;
             this.ignore2.Text = "防止修改注册表";
             this.ignore2.UseVisualStyleBackColor = true;
@@ -757,7 +757,7 @@ namespace SetBox
             this.ignoreManifest.AutoSize = true;
             this.ignoreManifest.Location = new System.Drawing.Point(215, 146);
             this.ignoreManifest.Name = "ignoreManifest";
-            this.ignoreManifest.Size = new System.Drawing.Size(194, 31);
+            this.ignoreManifest.Size = new System.Drawing.Size(157, 25);
             this.ignoreManifest.TabIndex = 8;
             this.ignoreManifest.Text = "忽略资源联网检查";
             this.ignoreManifest.UseVisualStyleBackColor = true;
@@ -768,7 +768,7 @@ namespace SetBox
             this.useUserPath_check.AutoSize = true;
             this.useUserPath_check.Location = new System.Drawing.Point(23, 146);
             this.useUserPath_check.Name = "useUserPath_check";
-            this.useUserPath_check.Size = new System.Drawing.Size(214, 31);
+            this.useUserPath_check.Size = new System.Drawing.Size(173, 25);
             this.useUserPath_check.TabIndex = 7;
             this.useUserPath_check.Text = "使用自定义资源路径";
             this.useUserPath_check.UseVisualStyleBackColor = true;
@@ -779,7 +779,7 @@ namespace SetBox
             this.assestPath_txt.Location = new System.Drawing.Point(96, 105);
             this.assestPath_txt.MaxLength = 10000;
             this.assestPath_txt.Name = "assestPath_txt";
-            this.assestPath_txt.Size = new System.Drawing.Size(408, 34);
+            this.assestPath_txt.Size = new System.Drawing.Size(408, 29);
             this.assestPath_txt.TabIndex = 6;
             // 
             // unitlevel_txt
@@ -787,7 +787,7 @@ namespace SetBox
             this.unitlevel_txt.Location = new System.Drawing.Point(96, 60);
             this.unitlevel_txt.MaxLength = 10;
             this.unitlevel_txt.Name = "unitlevel_txt";
-            this.unitlevel_txt.Size = new System.Drawing.Size(151, 34);
+            this.unitlevel_txt.Size = new System.Drawing.Size(151, 29);
             this.unitlevel_txt.TabIndex = 3;
             this.unitlevel_txt.TextChanged += new System.EventHandler(this.clanname_txt_TextChanged);
             // 
@@ -796,7 +796,7 @@ namespace SetBox
             this.username_txt.Location = new System.Drawing.Point(96, 17);
             this.username_txt.MaxLength = 10;
             this.username_txt.Name = "username_txt";
-            this.username_txt.Size = new System.Drawing.Size(151, 34);
+            this.username_txt.Size = new System.Drawing.Size(151, 29);
             this.username_txt.TabIndex = 1;
             this.username_txt.TextChanged += new System.EventHandler(this.username_txt_TextChanged);
             // 
@@ -805,7 +805,7 @@ namespace SetBox
             this.label9.AutoSize = true;
             this.label9.Location = new System.Drawing.Point(16, 108);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(112, 27);
+            this.label9.Size = new System.Drawing.Size(90, 21);
             this.label9.TabIndex = 5;
             this.label9.Text = "资源路径：";
             // 
@@ -824,7 +824,7 @@ namespace SetBox
             this.label23.AutoSize = true;
             this.label23.Location = new System.Drawing.Point(16, 63);
             this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(112, 27);
+            this.label23.Size = new System.Drawing.Size(90, 21);
             this.label23.TabIndex = 2;
             this.label23.Text = "玩家等级：";
             // 
@@ -833,7 +833,7 @@ namespace SetBox
             this.label22.AutoSize = true;
             this.label22.Location = new System.Drawing.Point(16, 20);
             this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(92, 27);
+            this.label22.Size = new System.Drawing.Size(74, 21);
             this.label22.TabIndex = 0;
             this.label22.Text = "用户名：";
             // 
@@ -870,20 +870,31 @@ namespace SetBox
             this.tabPage2.Controls.Add(this.label12);
             this.tabPage2.Controls.Add(this.label14);
             this.tabPage2.Controls.Add(this.speedbar);
-            this.tabPage2.Location = new System.Drawing.Point(4, 36);
+            this.tabPage2.Location = new System.Drawing.Point(4, 30);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(531, 301);
+            this.tabPage2.Size = new System.Drawing.Size(531, 307);
             this.tabPage2.TabIndex = 4;
             this.tabPage2.Text = "战斗设置";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxMutiTarget
+            // 
+            this.checkBoxMutiTarget.AutoSize = true;
+            this.checkBoxMutiTarget.Location = new System.Drawing.Point(23, 246);
+            this.checkBoxMutiTarget.Name = "checkBoxMutiTarget";
+            this.checkBoxMutiTarget.Size = new System.Drawing.Size(141, 25);
+            this.checkBoxMutiTarget.TabIndex = 28;
+            this.checkBoxMutiTarget.Text = "多目标显示魔防";
+            this.checkBoxMutiTarget.UseVisualStyleBackColor = true;
+            this.checkBoxMutiTarget.CheckedChanged += new System.EventHandler(this.checkBoxMutiTarget_CheckedChanged);
             // 
             // showUICheck
             // 
             this.showUICheck.AutoSize = true;
             this.showUICheck.Location = new System.Drawing.Point(23, 209);
             this.showUICheck.Name = "showUICheck";
-            this.showUICheck.Size = new System.Drawing.Size(174, 31);
+            this.showUICheck.Size = new System.Drawing.Size(141, 25);
             this.showUICheck.TabIndex = 27;
             this.showUICheck.Text = "不显示治疗数字";
             this.showUICheck.UseVisualStyleBackColor = true;
@@ -896,7 +907,7 @@ namespace SetBox
             this.label19.ForeColor = System.Drawing.Color.Red;
             this.label19.Location = new System.Drawing.Point(269, 111);
             this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(214, 23);
+            this.label19.Size = new System.Drawing.Size(177, 20);
             this.label19.TabIndex = 26;
             this.label19.Text = "开启后秒数显示可能不准！";
             // 
@@ -907,7 +918,7 @@ namespace SetBox
             this.label18.ForeColor = System.Drawing.Color.Blue;
             this.label18.Location = new System.Drawing.Point(111, 54);
             this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(265, 23);
+            this.label18.Size = new System.Drawing.Size(219, 20);
             this.label18.TabIndex = 25;
             this.label18.Text = "鼠标放在滑动条上然后用滚轮调节";
             // 
@@ -926,7 +937,7 @@ namespace SetBox
             this.timeCheck2.AutoSize = true;
             this.timeCheck2.Location = new System.Drawing.Point(186, 111);
             this.timeCheck2.Name = "timeCheck2";
-            this.timeCheck2.Size = new System.Drawing.Size(94, 31);
+            this.timeCheck2.Size = new System.Drawing.Size(77, 25);
             this.timeCheck2.TabIndex = 23;
             this.timeCheck2.Text = "渲染帧";
             this.timeCheck2.UseVisualStyleBackColor = true;
@@ -935,9 +946,12 @@ namespace SetBox
             // checkBox2
             // 
             this.checkBox2.AutoSize = true;
+            this.checkBox2.Checked = true;
+            this.checkBox2.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox2.Enabled = false;
             this.checkBox2.Location = new System.Drawing.Point(23, 173);
             this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(134, 31);
+            this.checkBox2.Size = new System.Drawing.Size(109, 25);
             this.checkBox2.TabIndex = 22;
             this.checkBox2.Text = "启用对数盾";
             this.checkBox2.UseVisualStyleBackColor = true;
@@ -948,7 +962,7 @@ namespace SetBox
             this.speedlabel.AutoSize = true;
             this.speedlabel.Location = new System.Drawing.Point(467, 15);
             this.speedlabel.Name = "speedlabel";
-            this.speedlabel.Size = new System.Drawing.Size(24, 27);
+            this.speedlabel.Size = new System.Drawing.Size(19, 21);
             this.speedlabel.TabIndex = 21;
             this.speedlabel.Text = "1";
             // 
@@ -959,7 +973,7 @@ namespace SetBox
             this.label15.ForeColor = System.Drawing.Color.Red;
             this.label15.Location = new System.Drawing.Point(81, 74);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(382, 23);
+            this.label15.Size = new System.Drawing.Size(316, 20);
             this.label15.TabIndex = 14;
             this.label15.Text = "警告：速度过快或过慢可能会导致意想不到的bug";
             // 
@@ -968,7 +982,7 @@ namespace SetBox
             this.checkBox6.AutoSize = true;
             this.checkBox6.Location = new System.Drawing.Point(23, 142);
             this.checkBox6.Name = "checkBox6";
-            this.checkBox6.Size = new System.Drawing.Size(198, 31);
+            this.checkBox6.Size = new System.Drawing.Size(159, 25);
             this.checkBox6.TabIndex = 13;
             this.checkBox6.Text = "实时显示boss双防";
             this.checkBox6.UseVisualStyleBackColor = true;
@@ -979,7 +993,7 @@ namespace SetBox
             this.showTimeCkeck.AutoSize = true;
             this.showTimeCkeck.Location = new System.Drawing.Point(23, 111);
             this.showTimeCkeck.Name = "showTimeCkeck";
-            this.showTimeCkeck.Size = new System.Drawing.Size(194, 31);
+            this.showTimeCkeck.Size = new System.Drawing.Size(157, 25);
             this.showTimeCkeck.TabIndex = 12;
             this.showTimeCkeck.Text = "时间显示精确到帧";
             this.showTimeCkeck.UseVisualStyleBackColor = true;
@@ -990,7 +1004,7 @@ namespace SetBox
             this.label12.AutoSize = true;
             this.label12.Location = new System.Drawing.Point(371, 15);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(112, 27);
+            this.label12.Size = new System.Drawing.Size(90, 21);
             this.label12.TabIndex = 10;
             this.label12.Text = "当前速度：";
             // 
@@ -999,7 +1013,7 @@ namespace SetBox
             this.label14.AutoSize = true;
             this.label14.Location = new System.Drawing.Point(19, 15);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(112, 27);
+            this.label14.Size = new System.Drawing.Size(90, 21);
             this.label14.TabIndex = 9;
             this.label14.Text = "全局变速：";
             // 
@@ -1009,7 +1023,7 @@ namespace SetBox
             this.speedbar.Maximum = 5;
             this.speedbar.Minimum = -6;
             this.speedbar.Name = "speedbar";
-            this.speedbar.Size = new System.Drawing.Size(234, 56);
+            this.speedbar.Size = new System.Drawing.Size(234, 45);
             this.speedbar.TabIndex = 7;
             this.speedbar.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.speedbar.Scroll += new System.EventHandler(this.speedbar_Scroll);
@@ -1017,10 +1031,10 @@ namespace SetBox
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.logBox);
-            this.tabPage1.Location = new System.Drawing.Point(4, 36);
+            this.tabPage1.Location = new System.Drawing.Point(4, 30);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(531, 301);
+            this.tabPage1.Size = new System.Drawing.Size(531, 307);
             this.tabPage1.TabIndex = 5;
             this.tabPage1.Text = "log";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -1051,10 +1065,10 @@ namespace SetBox
             this.tabPage3.Controls.Add(this.radioButton1);
             this.tabPage3.Controls.Add(this.label16);
             this.tabPage3.Controls.Add(this.textBox1);
-            this.tabPage3.Location = new System.Drawing.Point(4, 36);
+            this.tabPage3.Location = new System.Drawing.Point(4, 30);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(531, 301);
+            this.tabPage3.Size = new System.Drawing.Size(531, 307);
             this.tabPage3.TabIndex = 6;
             this.tabPage3.Text = "备用";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -1074,7 +1088,7 @@ namespace SetBox
             this.label20.AutoSize = true;
             this.label20.Location = new System.Drawing.Point(17, 263);
             this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(98, 27);
+            this.label20.Size = new System.Drawing.Size(79, 21);
             this.label20.TabIndex = 10;
             this.label20.Text = "版本号： ";
             // 
@@ -1082,7 +1096,7 @@ namespace SetBox
             // 
             this.VersionText.Location = new System.Drawing.Point(101, 261);
             this.VersionText.Name = "VersionText";
-            this.VersionText.Size = new System.Drawing.Size(179, 34);
+            this.VersionText.Size = new System.Drawing.Size(179, 29);
             this.VersionText.TabIndex = 9;
             // 
             // button3
@@ -1102,7 +1116,7 @@ namespace SetBox
             this.label13.ForeColor = System.Drawing.Color.Red;
             this.label13.Location = new System.Drawing.Point(104, 220);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(192, 27);
+            this.label13.Size = new System.Drawing.Size(154, 21);
             this.label13.TabIndex = 7;
             this.label13.Text = "请在进入游戏后使用";
             // 
@@ -1122,7 +1136,7 @@ namespace SetBox
             this.label17.ForeColor = System.Drawing.Color.Red;
             this.label17.Location = new System.Drawing.Point(232, 47);
             this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(332, 27);
+            this.label17.Size = new System.Drawing.Size(266, 21);
             this.label17.TabIndex = 5;
             this.label17.Text = "时间戳请复制到别处修改后黏贴即可";
             // 
@@ -1132,7 +1146,7 @@ namespace SetBox
             this.radioButton2.Checked = true;
             this.radioButton2.Location = new System.Drawing.Point(86, 49);
             this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(153, 31);
+            this.radioButton2.Size = new System.Drawing.Size(124, 25);
             this.radioButton2.TabIndex = 4;
             this.radioButton2.TabStop = true;
             this.radioButton2.Text = "使用系统时间";
@@ -1144,7 +1158,7 @@ namespace SetBox
             this.radioButton1.AutoSize = true;
             this.radioButton1.Location = new System.Drawing.Point(86, 18);
             this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(173, 31);
+            this.radioButton1.Size = new System.Drawing.Size(140, 25);
             this.radioButton1.TabIndex = 3;
             this.radioButton1.Text = "使用自定义时间";
             this.radioButton1.UseVisualStyleBackColor = true;
@@ -1155,7 +1169,7 @@ namespace SetBox
             this.label16.AutoSize = true;
             this.label16.Location = new System.Drawing.Point(17, 18);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(78, 27);
+            this.label16.Size = new System.Drawing.Size(63, 21);
             this.label16.TabIndex = 2;
             this.label16.Text = "时间： ";
             // 
@@ -1163,25 +1177,14 @@ namespace SetBox
             // 
             this.textBox1.Location = new System.Drawing.Point(236, 15);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(210, 34);
+            this.textBox1.Size = new System.Drawing.Size(210, 29);
             this.textBox1.TabIndex = 1;
             this.textBox1.Text = "2021/06/25 10:00:00";
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
-            // checkBoxMutiTarget
-            // 
-            this.checkBoxMutiTarget.AutoSize = true;
-            this.checkBoxMutiTarget.Location = new System.Drawing.Point(23, 246);
-            this.checkBoxMutiTarget.Name = "checkBoxMutiTarget";
-            this.checkBoxMutiTarget.Size = new System.Drawing.Size(174, 31);
-            this.checkBoxMutiTarget.TabIndex = 28;
-            this.checkBoxMutiTarget.Text = "多目标显示魔防";
-            this.checkBoxMutiTarget.UseVisualStyleBackColor = true;
-            this.checkBoxMutiTarget.CheckedChanged += new System.EventHandler(this.checkBoxMutiTarget_CheckedChanged);
-            // 
             // ManagerForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 27F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(551, 380);
             this.Controls.Add(this.statusStrip1);

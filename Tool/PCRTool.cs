@@ -237,7 +237,7 @@ namespace PCRCalculator.Tool
                 MasterEnemyParameter.EnemyParameter fromAllKind = ManagerSingleton<MasterDataManager>.Instance.masterEnemyParameter.GetFromAllKind(enemyid);
                 var skillData0 = ManagerSingleton<MasterDataManager>.Instance.masterUnitSkillData[fromAllKind.unit_id];
                 var enemydata = new UnitDataC(fromAllKind);
-                if (!settings.battleSetting.useLogBarrier)
+                /*if (!settings.battleSetting.useLogBarrier)
                 {
                     foreach (int skill in skillData0.MainSkillIds)
                     {
@@ -256,7 +256,7 @@ namespace PCRCalculator.Tool
                             }
                         }
                     }
-                }
+                }*/
                 if (fromAllKind == null)
                 {
                     ClientLog.AccumulateClientLog("ERROR! can't find enemydata " + enemyid);

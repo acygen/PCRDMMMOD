@@ -354,7 +354,7 @@ namespace PCRCalculator.Tool
 	//[HarmonyPatch(typeof(ViewHome), "setHomeContentsButtonState")]
 	public class HomeUtility0
 	{
-		static void Postfix(ViewHome __instance)
+		/*static void Postfix(ViewHome __instance)
 		{
 			ClientLog.AccumulateClientLog("HOME-2900");
 			var banner = Traverse.Create(__instance).Field("taqTemp").GetValue<EHPLBCOOOPK.PCGMJIFHDCJ>();
@@ -362,7 +362,7 @@ namespace PCRCalculator.Tool
 			var dd =Traverse.Create(__instance).Field("userData").GetValue<UserData>();
 			ClientLog.AccumulateClientLog($"HOME-2960{dd == null}");
 
-		}
+		}*/
 	}
 	//[HarmonyPatch(typeof(PartsBanner), "Init")]
 	public class HomeUtility00

@@ -50,14 +50,12 @@ namespace PCRCalculator.Hook
         
 
     }
-    [HarmonyPatch(typeof(UnitActionController), "ExecAction")]
+    //[HarmonyPatch(typeof(UnitActionController), nameof(UnitActionController.ExecAction))]
     class UnitActionControllerAdd0
     {
-        static void Postfix(UnitActionController __instance, ActionParameter action,
-          Skill skill,
-          BasePartsData target,
-          int num,
-          float starttime)
+        static void Postfix(UnitActionController __instance,
+            ActionParameter action, Skill skill, BasePartsData target, int num, float starttime
+            )
         {
             int pos = 0;
             try

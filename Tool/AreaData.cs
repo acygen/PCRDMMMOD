@@ -165,15 +165,25 @@ namespace PCRCalculator.Tool
         public List<EquipSlot> equip_slot;
 
         public List<EquipSlot> unique_equip_slot;
+        public List<ExSolt> ex_equip_slot;
+        public List<ExSolt> cb_ex_equip_slot;
         public int power = -1;
         public SkinData skin_data;
         public Unlock6Item unlock_rarity_6_item = new Unlock6Item(0);
+        public int favorite_flag = 0;
         public UnitDataS()
         {
-
+            ex_equip_slot = new List<ExSolt>();
+            cb_ex_equip_slot = new List<ExSolt>();
+            for(int i = 1; i<= 3; i++)
+            {
+                ExSolt exSolt = new ExSolt(i);
+                ex_equip_slot.Add(exSolt);
+                cb_ex_equip_slot.Add(exSolt);
+            }
         }
 
-        public UnitDataS(int id, int rarity)
+        public UnitDataS(int id, int rarity):this()
         {
             this.id = id;
             unit_rarity = rarity;
@@ -622,6 +632,22 @@ namespace PCRCalculator.Tool
 
         }
     }
+    public class ExSolt
+    {
+        public int slot = 1;
+        public int serial_id = 0;
+
+        public ExSolt()
+        {
+        }
+
+        public ExSolt(int slot, int serial_id = 0)
+        {
+            this.slot = slot;
+            this.serial_id = serial_id;
+        }
+    }
+
     public class StatusParamShort
     {
         public long hp;

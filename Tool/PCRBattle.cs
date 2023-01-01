@@ -655,6 +655,7 @@ namespace PCRCalculator.Tool
         }
         public void OnReceiveDamage(int target,int source,PlayerDamageData damageData)
         {
+            //Cute.ClientLog.AccumulateClientLog($"OnReceiveDamage-{target}-{source}-{damageData.damage}");
             if (isJJCBattle)
                 return;
             try

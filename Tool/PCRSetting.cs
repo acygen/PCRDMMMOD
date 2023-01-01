@@ -572,6 +572,8 @@ namespace PCRCalculator.Tool
                         removeList.Add(ss);
                 }
             }
+            if (!dictionary2.ContainsKey(storyid + 1))
+                addList.Add(storyid + 1);
             loadData.data.UpdataStoryId(addList, removeList);
         }
         public UnitDataS GetUnitDataS(int unitid)

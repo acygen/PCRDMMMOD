@@ -217,6 +217,8 @@ namespace PCRCalculator.Hook
             float startRemainTime = Traverse.Create(battleManager).Field("startRemainTime").GetValue<float>();
 
             int exectTime = UnityEngine.Mathf.RoundToInt((startRemainTime - battleManager.HIJKBOIEPFC) * 60);
+            //Cute.ClientLog.AccumulateClientLog("Receive Log");
+
             PCRBattle.Instance.OnReceiveLog(battleLogData, exectTime);
         }
     }
