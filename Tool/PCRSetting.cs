@@ -410,6 +410,12 @@ namespace PCRCalculator.Tool
                     return unitid;
             }
         }
+        /*public bool GetUnitNameBYDic(int unitid,out string value)
+        {
+            if (unitNameDic.TryGetValue(GetOrinUnitid(unitid), out value))
+                return true;
+            return false;
+        }*/
         public string GetUnitNameByID(int unitid)
         {
             try

@@ -190,7 +190,7 @@ namespace PCRCalculator.Tool
                 var deck = new MusicTop();
                 result = JsonConvert.SerializeObject(deck);
             }
-            else if (URL.Contains("my_page/set_my_page"))
+            else if (URL.Contains("my_page/register_my_page"))
             {
                 PCRSettings.Instance.OnSetMyPage(uploadJson);
                 var deck = new MyPageSet();

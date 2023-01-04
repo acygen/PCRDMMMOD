@@ -14,6 +14,7 @@ using CodeStage.AntiCheat.ObscuredTypes;
 using System.Reflection;
 using Coneshell;
 using Cute;
+using static Elements.ViewNormalArenaResult;
 
 namespace PCRCalculator.Hook
 {
@@ -32,7 +33,19 @@ namespace PCRCalculator.Hook
             return (T)result;
         }
     }
-
+    [HarmonyPatch(typeof(Elements.MasterUnitData.UnitData), "UnitName", MethodType.Getter)]
+    class HookUnitName
+    {
+        static bool Prefix(Elements.MasterUnitData.UnitData __instance, ref ObscuredString __result)
+        {
+            if (PCRSettings.unitNameDic.TryGetValue(__instance.UnitId, out string value))
+            {
+                __result = value;
+                return false;
+            }
+            return true;
+        }
+    }
     [HarmonyPatch(typeof(Cute.PABCCELMCAJ), "LHMAODLAGNH", MethodType.Getter)]
     class ChangePath
     {

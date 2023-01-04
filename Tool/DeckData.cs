@@ -43,6 +43,9 @@ namespace PCRCalculator.Tool
     public class MyPageReceive
     {
         public List<MyPage> my_page_info = new List<MyPage>();
+        public long viewer_id = 0;
+        public long dmm_viewer_id = 0;
+        public string dmm_onetime_token;
     }
     public class BattleLodData
     {
