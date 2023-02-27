@@ -228,8 +228,8 @@ namespace PCRCalculator.Tool
         public List<Deck> deck_list;
         public object item_list;
         public object user_equip;
-        public List<object> user_ex_equip = new List<object>();
-        public List<object> user_clan_battle_ex_equip_restriction = new List<object>();
+        public List<UserExEquipData> user_ex_equip = new List<UserExEquipData>();
+        public List<UserExEquipData> user_clan_battle_ex_equip_restriction = new List<UserExEquipData>();
         public object shop;
         public object ini_setting;
         public int max_storage_num;
@@ -728,5 +728,15 @@ namespace PCRCalculator.Tool
         public int unit_id;
         public int remain_time;
         public int is_battle_finish;
+    }
+    public class UserExEquipData
+    {
+        public int serial_id;
+        public int ex_equipment_id;
+        public int enhancement_pt;
+        public int rank;
+        public int protection_flag;
+
+        public int unit_id;
     }
 }

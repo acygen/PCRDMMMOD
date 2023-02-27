@@ -86,8 +86,10 @@ namespace SetBox
         private CheckBox replaceURLCheck;
         private Label label20;
         private TextBox VersionText;
-        private Button ConfigVersion;
         private CheckBox checkBoxMutiTarget;
+        private Button button4;
+        private Button ConfigVersion;
+        private Button button5;
         private PCRSettings Settings;
         #endregion
         public ManagerForm()
@@ -320,6 +322,7 @@ namespace SetBox
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.logBox = new System.Windows.Forms.TextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.button4 = new System.Windows.Forms.Button();
             this.ConfigVersion = new System.Windows.Forms.Button();
             this.label20 = new System.Windows.Forms.Label();
             this.VersionText = new System.Windows.Forms.TextBox();
@@ -331,6 +334,7 @@ namespace SetBox
             this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.label16 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.button5 = new System.Windows.Forms.Button();
             this.statusStrip1.SuspendLayout();
             this.clanSetting.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cb_seed)).BeginInit();
@@ -1057,6 +1061,8 @@ namespace SetBox
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.button5);
+            this.tabPage3.Controls.Add(this.button4);
             this.tabPage3.Controls.Add(this.ConfigVersion);
             this.tabPage3.Controls.Add(this.label20);
             this.tabPage3.Controls.Add(this.VersionText);
@@ -1076,9 +1082,19 @@ namespace SetBox
             this.tabPage3.Text = "备用";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(311, 95);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(187, 43);
+            this.button4.TabIndex = 12;
+            this.button4.Text = "更新EX装备(简)";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
             // ConfigVersion
             // 
-            this.ConfigVersion.Location = new System.Drawing.Point(286, 256);
+            this.ConfigVersion.Location = new System.Drawing.Point(287, 256);
             this.ConfigVersion.Name = "ConfigVersion";
             this.ConfigVersion.Size = new System.Drawing.Size(227, 43);
             this.ConfigVersion.TabIndex = 11;
@@ -1184,6 +1200,16 @@ namespace SetBox
             this.textBox1.TabIndex = 1;
             this.textBox1.Text = "2021/06/25 10:00:00";
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(311, 144);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(187, 43);
+            this.button5.TabIndex = 13;
+            this.button5.Text = "更新EX装备(全)";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // ManagerForm
             // 
@@ -1411,6 +1437,32 @@ namespace SetBox
         {
             Settings.battleSetting.mutiTargetShowMDEF = checkBoxMutiTarget.Checked;
             Settings.Save(5);
+        }
+        //更新EX装备
+        private void button4_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                PCRTool.ReCreateAllEXEquipments();
+                MessageBox.Show($"成功，重启生效！");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"错误！{ex}");
+            }
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                PCRTool.ReCreateAllEXEquipments2();
+                MessageBox.Show($"成功，重启生效！");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"错误！{ex}");
+            }
         }
     }
 }

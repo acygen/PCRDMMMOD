@@ -576,4 +576,14 @@ namespace PCRCalculator.Hook
         }
     }
 
+    /*[HarmonyPatch(typeof(Elements.UnitNotificationUtility.ExtraEquipNotification), "updateExtraEquipSlotNotification")]
+    class class2
+    {
+        static bool Prefix(NoticeExtraEquipStatus _noticeInfo, ExtraEquipSlot _exSlot, int _unitId, int _category, HashSet<int> _canEquipCategory, Dictionary<int, HashSet<int>> _unitRestrictionCategoryDic)
+        {
+            
+            return false;// true;
+        }
+    }*/
+
 }

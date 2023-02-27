@@ -9,6 +9,7 @@ using Newtonsoft0.Json;
 using System.Windows.Forms;
 using System.Net;
 using System.IO;
+using static Elements.MasterExEquipmentEnhanceData;
 
 namespace PCRCalculator.Tool
 {
@@ -52,6 +53,7 @@ namespace PCRCalculator.Tool
                 MessageBox.Show("启动插件时发生错误：" + ex.Message);
             }
             PCRSettings.Onlog += managerForm.OnLog;
+            Debug.Log("启动插件成功！");
 
         }
         public static string GetNetworkresult(string URL, string uploadJson)
@@ -211,7 +213,12 @@ namespace PCRCalculator.Tool
                 var deck = new MusicTop();
                 result = JsonConvert.SerializeObject(deck);
             }
-
+            else if (URL.Contains("equip_ex"))
+            {
+                var deck = new MusicTop();
+                result = JsonConvert.SerializeObject(deck);
+                ClientLog.AccumulateClientLog(uploadJson);
+            }
             if (result == "ERROR")
             {
                 ClientLog.AccumulateClientLog("Upload json:\n" + uploadJson + "\n NOT SET YET!\n URL:" + URL);
@@ -401,6 +408,75 @@ namespace PCRCalculator.Tool
             //unitEditForm.Show();
             //unitEditForm.Init(data, PCRSettings.Instance.GetUnitLove(unitid), () => { unitEditForm = null; });
             unitEditForm.Show();
+        }
+        public static void ReCreateAllEXEquipments()
+        {
+            ReInitUnitExSolt();
+
+            List<UserExEquipData> exEquipDatas = new List<UserExEquipData>();
+            var exdic = ManagerSingleton<MasterDataManager>.Instance.masterExEquipmentData.dictionary;
+            var enhance = ManagerSingleton<MasterDataManager>.Instance.masterExEquipmentEnhanceData;
+            int idx = 1;
+
+            foreach (var data in exdic.Values)
+            {
+                var enList = enhance.GetListWithRarity(data.rarity);
+                var enhancedata = enList[enList.Count - 1];
+                for(int j =1;j<=5;j++)
+                {
+                    UserExEquipData userEx = new UserExEquipData
+                    {
+                        serial_id = idx,
+                        ex_equipment_id = Convert.ToInt32(data.ex_equipment_id),
+                        enhancement_pt = Convert.ToInt32(enhancedata.TotalPoint),
+                        rank = Convert.ToInt32(enhancedata.EnhanceLevel),
+                        protection_flag = 1,
+                    };
+                    exEquipDatas.Add(userEx);
+                    idx++;
+                }
+            }
+
+            PCRSettings.Instance.loadData.data.user_ex_equip = exEquipDatas;
+            PCRSettings.Instance.Save(1);
+        }
+
+        public static void ReCreateAllEXEquipments2()
+        {
+            ReInitUnitExSolt();
+
+            List<UserExEquipData> exEquipDatas = new List<UserExEquipData>();
+            var exdic = ManagerSingleton<MasterDataManager>.Instance.masterExEquipmentData.dictionary;
+            var enhance = ManagerSingleton<MasterDataManager>.Instance.masterExEquipmentEnhanceData;
+            int idx = 1;
+            for (int i = 0; i < 5; i++)
+            {
+                foreach (var data in exdic.Values)
+                {
+                    foreach (var enhancedata in enhance.GetListWithRarity(data.rarity))
+                    {
+                        UserExEquipData userEx = new UserExEquipData
+                        {
+                            serial_id = idx,
+                            ex_equipment_id = Convert.ToInt32(data.ex_equipment_id),
+                            enhancement_pt = Convert.ToInt32(enhancedata.TotalPoint),
+                            rank = Convert.ToInt32(enhancedata.RankupLevel),
+                            protection_flag = 1,
+                        };
+                        exEquipDatas.Add(userEx);
+                        idx++;
+                    }
+                }
+            }
+            PCRSettings.Instance.loadData.data.user_ex_equip = exEquipDatas;
+            PCRSettings.Instance.Save(1);
+        }
+        private static void ReInitUnitExSolt()
+        {
+            foreach(var dd in PCRSettings.Instance.loadData.data.unit_list)
+            {
+                dd.InitExSolt();
+            }
         }
     }
 }

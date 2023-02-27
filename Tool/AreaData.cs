@@ -175,14 +175,18 @@ namespace PCRCalculator.Tool
         {
             ex_equip_slot = new List<ExSolt>();
             cb_ex_equip_slot = new List<ExSolt>();
-            for(int i = 1; i<= 3; i++)
+        }
+        public void InitExSolt()
+        {
+            ex_equip_slot = new List<ExSolt>();
+            cb_ex_equip_slot = new List<ExSolt>();
+            for (int i = 1; i <= 3; i++)
             {
                 ExSolt exSolt = new ExSolt(i);
                 ex_equip_slot.Add(exSolt);
                 cb_ex_equip_slot.Add(exSolt);
             }
         }
-
         public UnitDataS(int id, int rarity):this()
         {
             this.id = id;
@@ -634,17 +638,16 @@ namespace PCRCalculator.Tool
     }
     public class ExSolt
     {
-        public int slot = 1;
+        public int ex_equipment_id = 0;
         public int serial_id = 0;
-
+        public int enhancement_pt = 0;
+        public int slot;
         public ExSolt()
         {
         }
-
-        public ExSolt(int slot, int serial_id = 0)
+        public ExSolt(int i)
         {
-            this.slot = slot;
-            this.serial_id = serial_id;
+            slot = i;
         }
     }
 
